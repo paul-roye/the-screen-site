@@ -200,6 +200,12 @@ figure { margin: 0; }
 .schema .outil { background: var(--pierre); border: 1px solid var(--trait); font: 500 .8rem/1.2 var(--f-ui); padding: .35rem .5rem; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--os); }
 .schema figcaption { font: 400 .85rem/1.3 var(--f-ui); color: var(--fane); padding: .5rem .6rem; border-top: 1px solid var(--trait); }
 
+/* Capture d'écran de The Screen, agrandie d'un clic */
+.capture { border: 1px solid var(--trait); background: var(--void); min-width: 0; }
+.capture-bouton { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
+.capture img { display: block; width: 100%; height: auto; }
+.capture figcaption { font: 400 .85rem/1.3 var(--f-ui); color: var(--fane); padding: .5rem .6rem; border-top: 1px solid var(--trait); }
+
 /* Le sceau d'une version */
 .version { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 1.5rem; align-items: center; border: 1px solid var(--trait-fort); background: var(--pierre); padding: 1.5rem; }
 .sceau { width: 8rem; aspect-ratio: 1; border-radius: 50%; background: var(--sang-profond); color: var(--os-clair); display: grid; place-content: center; text-align: center; position: relative; box-shadow: var(--ombre); }

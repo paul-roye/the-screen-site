@@ -18,7 +18,7 @@ Le site est fait de pages statiques (`public/`) et d'une petite API (`functions/
 | `public/config.js` | Deux réglages : le dépôt GitHub des téléchargements, la clé de site Turnstile |
 | `public/donnees/versions.json` | Les versions en cours et le nom de leurs zips : **à mettre à jour à chaque version** |
 | `public/donnees/journal.json` | Le journal de fabrication de The Table ; ses photos dans `public/photos/` |
-| `public/captures/` | Les captures d'écran des extensions : `party.png`, `wild-shape.png`, `companion.png` |
+| `public/captures/` | Les captures d'écran : `the-screen.webp` (le tableau de bord, sur la campagne témoin), et celles des extensions, `party.png`, `wild-shape.png`, `companion.png` |
 | `public/telechargements/` | Les zips à télécharger, servis tels quels |
 | `functions/api/` | L'API : `idees`, `idees/<id>/vote`, `bugs`, `promesses`, `lettre`, `retours`, `admin` |
 | `lib/outils.js` | Les fonctions communes de l'API |
