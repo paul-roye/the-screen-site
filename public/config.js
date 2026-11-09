@@ -3,5 +3,5 @@
 //  - turnstile : la clé de site Turnstile (Cloudflare), publique. Vide : pas de vérification anti-robot affichée.
 window.SITE = {
   depot: 'paul-roye/the-screen-site',
-  turnstile: '',
+  turnstile: '0x4AAAAAAF6jyj2_CMrt-DHq',
 };
