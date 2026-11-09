@@ -1,19 +1,19 @@
 {
   "the-screen": {
-    "version": "1.2.0",
-    "date": "2026-11-08",
-    "fichier": "the-screen-1.2.0.zip",
-    "nouveautes": "l’écran des joueurs, les plugins et une table mieux tenue",
+    "version": "1.2.1",
+    "date": "2026-11-09",
+    "fichier": "the-screen-1.2.1.zip",
+    "nouveautes": "l’accueil pour tous, et les mises à jour par patch",
     "points": [
-      "Écran des joueurs sur un second écran ou une TV posée à plat, avec un seul bouton Diffuser.",
-      "Plugins activés campagne par campagne, dont The Table pour le ruban LED.",
-      "Fin de combat : PNJ tombés à marquer morts, jalon à démarrer ou à terminer.",
-      "Avant de terminer un jalon ou une étape : ce qui reste à jouer, à régler sans quitter la page.",
-      "Combat au clavier, trajets sans rencontres aléatoires, fenêtres qui se réduisent sur place."
+      "Accueil : avec une seule campagne, l’accueil était inaccessible, et « Nouvelle campagne » avec lui. Les flèches croisées de l’en-tête y mènent maintenant toujours, et le premier lancement montre la liste.",
+      "Patchs : un petit zip qui ne change que les fichiers nécessaires. Décompressez-le, double-cliquez « Appliquer le patch.cmd » et choisissez votre gestionnaire ; vos campagnes ne sont pas touchées.",
+      "Extensions des joueurs : si vos joueurs utilisent The Seat · Party, vous fixez ses limites pour votre campagne (seuils de santé, PV en chiffres ou non) dans la fenêtre Campagne, onglet « Fiches D&D Beyond ».",
+      "Forme sauvage : un druide transformé (extension de son joueur) est montré avec sa forme, sa CA et son portrait dans Personnages, Combat et sur le tableau des joueurs.",
+      "Extension du MJ 1.18.0, à recharger dans Chrome : relevé toutes les 20 secondes, et les formes sauvages d’un druide ne sont plus relevées comme des compagnons."
     ]
   },
   "scribe": { "version": "1.18.0" },
-  "party": { "version": "1.3.0", "fichier": "extension-groupe-1.3.0.zip" },
-  "wild-shape": { "version": "1.3.0", "fichier": "extension-druide-1.3.0.zip" },
+  "party": { "version": "1.3.1", "fichier": "extension-groupe-1.3.1.zip" },
+  "wild-shape": { "version": "1.5.1", "fichier": "extension-druide-1.5.1.zip" },
   "companion": { "version": "1.9.0", "fichier": "extension-compagnon-1.9.0.zip" }
 }
