@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La cagnotte de The Table</title>
+<meta name="description" content="La cagnotte entre joueurs de The Table : ce que chaque palier débloque, comment ça se passe, et où inscrire sa promesse.">
+<meta name="robots" content="noindex">
+<link rel="icon" href="icone.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=Barlow+Semi+Condensed:wght@400;500;700&family=Cinzel:wght@500;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Grenze+Gotisch:wght@500;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap">
+<link rel="stylesheet" href="site.css">
+<script>try { if (localStorage.getItem('ambiance') === 'strahd') document.documentElement.dataset.ambiance = 'strahd'; } catch (e) {}</script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="hx" viewBox="0 0 128 128"><path d="M64 14 107 39v50L64 114 21 89V39z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round"/></symbol>
+    <symbol id="hx-fin" viewBox="-22 -22 44 44"><path d="M0-18 15.6-9V9L0 18-15.6 9V-9z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="barre">
+  <div class="dedans">
+    <a class="marque" href="index.html">
+      <svg class="blason" viewBox="0 0 128 128" aria-hidden="true"><use href="#hx"/><path class="gl" d="M36 82V50l17-8h22l17 8v32"/></svg>
+      The Screen
+    </a>
+    <nav aria-label="Pages">
+      <a href="index.html">Retour au site</a>
+      <a href="the-table.html">La démo de The Table</a>
+    </nav>
+    <div class="theme">
+      <span class="sur" id="theme-l">Thème de la page</span>
+      <div class="choix" id="ambiances" role="group" aria-labelledby="theme-l">
+        <button type="button" data-ambiance="aeldran" aria-pressed="true" title="Chroniques d’Aëldran : médiéval, or et azur" style="--c-theme: var(--pastille-aeldran)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg><span>Aëldran</span></button>
+        <button type="button" data-ambiance="strahd" aria-pressed="false" title="Malédiction de Strahd : gothique, néon" style="--c-theme: var(--pastille-strahd)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><span>Strahd</span></button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="bande" style="--c: var(--c-table); border-top: 0">
+    <div class="dedans">
+      <header class="tete">
+        <svg class="blason" viewBox="0 0 128 128" aria-hidden="true"><use href="#hx"/><rect class="gl" x="38" y="47" width="52" height="34" rx="3"/></svg>
+        <p class="sur">The Table · pour les joueurs</p>
+        <h1>La cagnotte de The Table</h1>
+        <p class="chapo">Ton MJ fabrique une table de jeu avec un écran à plat et un ruban de lumière. La table de base, il s’en occupe : elle marche dès le premier soir. La cagnotte sert à aller plus loin, palier par palier. Les montants sont provisoires.</p>
+      </header>
+      <div class="actions">
+        <a class="btn btn--fort" href="the-table.html">Essayer la démo : la table et l’appli des joueurs</a>
+        <a class="btn" href="#f-promesse">Inscrire ma promesse</a>
+      </div>
+
+      <div class="deux">
+        <ol class="paliers">
+          <li class="palier">
+            <span class="rang"><svg viewBox="-22 -22 44 44" aria-hidden="true"><use href="#hx-fin" x="-22" y="-22" width="44" height="44"/></svg><b>0</b></span>
+            <h3>La table elle-même</h3><span class="somme">0 €</span>
+            <p>Ton MJ y projette ses cartes avec un brouillard de guerre, des images et des informations. Les lumières suivent l’ambiance, et le cadre s’allume devant le joueur dont c’est le tour.</p>
+            <span class="cond">Déjà prévu : inclus dans la table.</span>
+          </li>
+          <li class="palier">
+            <span class="rang"><svg viewBox="-22 -22 44 44" aria-hidden="true"><use href="#hx-fin" x="-22" y="-22" width="44" height="44"/></svg><b>1</b></span>
+            <h3>L’appli joueurs</h3><span class="somme">10 €</span>
+            <p>Tu te connectes à la table depuis ton téléphone ou ton ordinateur, et tu déclenches quatre effets de base : réussite critique, soin, sort, attaque.</p>
+            <span class="cond"><span class="losanges" aria-hidden="true"><i></i><i></i></span><span data-compte="2">0 participation sur 2.</span> Ensuite, l’appli est ouverte à tout le monde.</span>
+          </li>
+          <li class="palier">
+            <span class="rang"><svg viewBox="-22 -22 44 44" aria-hidden="true"><use href="#hx-fin" x="-22" y="-22" width="44" height="44"/></svg><b>2</b></span>
+            <h3>Ta tablette et ton grimoire</h3><span class="somme">25 €</span>
+            <p>Une tablette gravée à ton nom, clipsée sur la table face à toi, avec un emplacement pour ta figurine. Et dans l’appli, un grimoire de six effets propres aux pouvoirs de ton personnage.</p>
+            <span class="cond"><span class="losanges" aria-hidden="true"><i></i><i></i></span><span data-compte="2">0 participation sur 2.</span> Deux tablettes non personnalisées sont alors fabriquées en plus.</span>
+          </li>
+          <li class="palier">
+            <span class="rang"><svg viewBox="-22 -22 44 44" aria-hidden="true"><use href="#hx-fin" x="-22" y="-22" width="44" height="44"/></svg><b>3</b></span>
+            <h3>Les sons et effets visuels de tes pouvoirs</h3><span class="somme">35 €</span>
+            <p>Tu personnalises les sons et les effets visuels que tes pouvoirs déclenchent sur la table.</p>
+            <span class="cond"><span class="losanges" aria-hidden="true"><i></i><i></i></span><span data-compte="2">0 participation sur 2.</span></span>
+          </li>
+          <li class="palier">
+            <span class="rang"><svg viewBox="-22 -22 44 44" aria-hidden="true"><use href="#hx-fin" x="-22" y="-22" width="44" height="44"/></svg><b>4</b></span>
+            <h3>L’afficheur et les cartes dynamiques</h3><span class="somme">45 €</span>
+            <p>Un afficheur tourné vers les joueurs : ordre du tour en combat, santé des personnages. Et des cartes animées, avec des effets visuels réalistes.</p>
+            <span class="cond"><span class="losanges" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span data-compte="4">0 participation sur 4.</span></span>
+          </li>
+        </ol>
+
+        <form class="formulaire" id="f-promesse">
+          <h3>Inscrire ma promesse</h3>
+          <p class="petit">Une promesse n’est pas un paiement : rien n’est encaissé ici. Ton MJ te recontacte quand un palier est atteint.</p>
+          <div class="rangee">
+            <div class="champ"><label for="p-prenom">Ton prénom</label><input id="p-prenom" type="text" autocomplete="given-name" required></div>
+            <div class="champ"><label for="p-palier">Palier</label>
+              <select id="p-palier">
+                <option value="1">1 · L’appli joueurs · 10 €</option>
+                <option value="2">2 · Tablette et grimoire · 25 €</option>
+                <option value="3">3 · Sons et effets visuels · 35 €</option>
+                <option value="4">4 · Afficheur et cartes dynamiques · 45 €</option>
+              </select>
+            </div>
+          </div>
+          <div class="champ"><label for="p-code">Code d’invitation</label><input id="p-code" type="text" placeholder="Donné par ton MJ" required></div>
+          <div class="champ"><label for="p-mot">Un mot pour ton MJ (facultatif)</label><textarea id="p-mot"></textarea></div>
+          <input class="pot" type="text" name="site" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="garde"></div>
+          <p class="message" role="status" hidden></p>
+          <button class="btn btn--fort" type="submit">Inscrire ma promesse</button>
+        </form>
+      </div>
+
+      <div class="bloc">
+        <h2 class="sous-titre">Comment ça se passe</h2>
+        <ul class="atouts atouts--trois">
+          <li><strong>La table d’abord</strong><span>Ton MJ finance la table de base. Elle fonctionne dès le premier soir, cagnotte ou pas.</span></li>
+          <li><strong>Des paliers à débloquer</strong><span>Chaque palier se débloque quand assez de joueurs y participent. Les montants peuvent encore bouger.</span></li>
+          <li><strong>Tu participes si tu veux</strong><span>Tout le monde joue sur la même table, avec ou sans participation.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pied-page">
+  <div class="dedans">
+    <p class="petit">Par Nizzren. The Table est un projet personnel, non officiel, sans lien avec Wizards of the Coast.</p>  </div>
+</footer>
+
+<script src="config.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Démo de The Table</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze:wght@500;700;800&family=Alegreya+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&family=Alegreya+Sans+SC:wght@500;700&display=swap">
+<style>
+@property --scene{syntax:'<color>';inherits:true;initial-value:#93A9DD}
+@property --hero{syntax:'<color>';inherits:true;initial-value:#B08CF5}
+/* Mise en page : principe de la table, puis le plateau piloté comme par le MJ, puis l'appli joueurs (qui s'ouvre en fenêtre flottante à côté du plateau), puis la cagnotte en paliers. Nuit unique ; l'accent suit l'ambiance, la couleur du personnage colore l'appli. */
+:root{
+  --bg:#0C1013; --panel:#131920; --panel2:#1A222A; --ink:#EEE5D4; --dim:#A49B8B; --line:#28313A;
+  --scene:#93A9DD; --hero:#B08CF5; --gold:#F4C86C; --wood:#6B4428; --wood2:#8A5A35;
+  --f-display:"Grenze","Palatino Linotype",Georgia,serif;
+  --f-body:"Alegreya Sans","Trebuchet MS",system-ui,sans-serif;
+  --f-sc:"Alegreya Sans SC","Alegreya Sans","Trebuchet MS",system-ui,sans-serif;
+  --dockw:352px;
+  color-scheme:dark;
+  transition:--scene 1.2s ease,--hero .8s ease;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+button,input{font:inherit;color:inherit}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+p{margin:0}
+h1,h2,h3,h4{margin:0;text-wrap:balance}
+.page{max-width:1280px;margin:0 auto;padding-inline:clamp(16px,4vw,40px);padding-block:clamp(24px,5vw,56px) 48px;display:flex;flex-direction:column;gap:clamp(48px,7vw,96px);transition:padding .3s}
+.btn{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:10px 18px;font-weight:700;font-size:16px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn:hover{border-color:var(--dim)}
+.btn.primary{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn[aria-pressed="true"]{border-color:var(--hero);box-shadow:inset 0 0 0 1px var(--hero)}
+.sec{display:flex;flex-direction:column;gap:22px}
+.sec-h{display:flex;flex-direction:column;gap:10px;max-width:64ch}
+.sec-h .k{font-family:var(--f-sc);font-weight:700;font-size:14px;letter-spacing:.12em;color:var(--scene);transition:color 1.2s}
+.sec-h h2{font-family:var(--f-display);font-weight:800;font-size:clamp(2rem,4.6vw,3.2rem);line-height:1}
+.sec-h p{color:var(--dim);font-size:1.08rem}
+
+/* En-tête */
+.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr);gap:24px 56px;align-items:end}
+.brand{font-family:var(--f-sc);font-weight:700;font-size:15px;letter-spacing:.14em;color:var(--scene)}
+.hero h1{font-family:var(--f-display);font-weight:800;font-size:clamp(2.6rem,7.4vw,5.4rem);line-height:.92;letter-spacing:-.01em;margin-top:10px}
+.hero h1 em{font-style:normal;color:var(--scene);text-shadow:0 0 34px color-mix(in srgb,var(--scene) 55%,transparent)}
+.hero-side{display:flex;flex-direction:column;gap:18px}
+.lede{font-size:1.15rem;line-height:1.5;max-width:42ch}
+.ctas{display:flex;flex-wrap:wrap;gap:10px}
+.status{font-size:14px;color:var(--dim)}
+
+/* Principe */
+.points{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.points li{background:var(--panel);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.points strong{font-family:var(--f-display);font-weight:700;font-size:1.3rem;line-height:1.1}
+.points span{color:var(--dim);font-size:15px;line-height:1.45}
+
+/* Plateau */
+.board{position:relative;border-radius:16px;overflow:hidden;background:#140F0B;line-height:0;box-shadow:0 0 0 1px var(--line),0 40px 90px -50px color-mix(in srgb,var(--scene) 70%,transparent)}
+#cv{display:block;width:100%}
+.cap{line-height:1.35;background:#0F0C09;border-top:1px solid rgba(255,255,255,.07);padding:10px 16px;display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;font-size:16px;min-height:46px}
+.cap b{font-family:var(--f-display);font-weight:700;font-size:20px;color:var(--scene);white-space:nowrap;transition:color 1.2s}
+.cap em{margin-left:auto;font-style:normal;font-family:var(--f-sc);font-weight:700;font-size:14px;letter-spacing:.06em;color:var(--gold);white-space:nowrap;border:1px solid rgba(244,200,108,.5);border-radius:999px;padding:2px 10px;align-self:center}
+.cap em.red{color:#FF8A80;border-color:rgba(229,83,75,.6)}
+.gm{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.gm>span{font-family:var(--f-sc);font-weight:700;font-size:13px;letter-spacing:.08em;color:var(--dim)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--panel);border-radius:999px;padding:5px 12px;font-weight:700;font-size:14px;cursor:pointer}
+.chip[aria-pressed="true"]{border-color:var(--scene);box-shadow:inset 0 0 0 1px var(--scene);background:color-mix(in srgb,var(--scene) 14%,transparent)}
+.chip.turn{background:var(--gold);color:#1A1406;border-color:var(--gold)}
+.lum{display:flex;align-items:center;gap:8px;font-size:14px;color:var(--dim)}
+.lum input{accent-color:var(--scene);width:140px}
+.lum output{font-variant-numeric:tabular-nums;min-width:3.2em;color:var(--ink)}
+
+/* Appli : présentation */
+.app-intro{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);gap:24px 48px;align-items:start}
+.feat{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:0}
+.feat li{display:grid;grid-template-columns:10px minmax(0,1fr);gap:4px 12px;padding-block:12px;border-top:1px solid var(--line)}
+.feat li::before{content:"";grid-row:span 2;width:10px;height:10px;border-radius:50%;margin-top:8px;background:var(--hero);transition:background .8s}
+.feat b{font-weight:700}
+.feat span{color:var(--dim)}
+.lvl{font-style:normal;font-family:var(--f-sc);font-weight:700;font-size:12px;letter-spacing:.06em;border:1px solid var(--line);color:var(--dim);border-radius:999px;padding:0 7px;margin-left:6px;white-space:nowrap;vertical-align:2px}
+.tab-card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.tab-card h3{font-family:var(--f-display);font-weight:700;font-size:1.35rem}
+.tab-card p{color:var(--dim);font-size:15px;line-height:1.45}
+.viz{height:150px;border-radius:12px;background:radial-gradient(ellipse at 50% 120%,#2a1d12,#0E0B08 70%);position:relative;overflow:hidden}
+.plexi{position:absolute;left:24%;right:24%;bottom:36px;height:86px;border-radius:3px 3px 0 0;background:rgba(220,235,255,.05);border:1px solid rgba(220,235,255,.25);border-bottom:0;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:24px;color:rgba(230,240,255,.2);transition:color .4s,box-shadow .4s,text-shadow .4s,border-color .4s}
+.plexi.lit{color:#fff;text-shadow:0 0 6px var(--hero),0 0 18px var(--hero);box-shadow:inset 0 -26px 40px -14px var(--hero),0 0 26px -6px var(--hero);border-color:color-mix(in srgb,var(--hero) 70%,white)}
+.shelf{position:absolute;left:14%;right:14%;bottom:18px;height:20px;border-radius:3px;background:repeating-linear-gradient(90deg,rgba(0,0,0,.08) 0 2px,transparent 2px 9px),linear-gradient(180deg,var(--wood2),var(--wood));display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:13px;color:#3A2312;text-shadow:0 1px 0 rgba(255,220,170,.25)}
+.mini-fig{position:absolute;bottom:38px;right:18%;width:16px;height:16px;border-radius:50%;background:var(--hero);box-shadow:0 0 0 3px #3A2312}
+.dice{position:absolute;bottom:38px;width:11px;height:11px;border-radius:3px}
+
+/* Fenêtre flottante de l'appli */
+.dock{position:fixed;z-index:30;right:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:8px;align-items:flex-end}
+.dock-bar{display:flex;gap:6px;align-items:center}
+.seg{display:inline-grid;grid-auto-flow:column;background:#1A222A;border-radius:10px;padding:3px;gap:3px}
+.seg button{border:0;background:transparent;border-radius:7px;padding:5px 10px;font-size:13px;font-weight:700;cursor:pointer;color:var(--dim)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.close{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--panel);cursor:pointer;font-size:18px;line-height:1}
+.device{background:#050607;box-shadow:0 0 0 1px #2a3138,0 30px 80px -20px rgba(0,0,0,.95),0 0 110px -40px var(--hero);overflow:hidden;display:flex;flex-direction:column}
+.device.phone{width:340px;height:min(690px,calc(100vh - 90px));border-radius:46px;padding:10px}
+.device.pc{width:600px;height:min(540px,calc(100vh - 90px));border-radius:12px;padding:0}
+.device.buzz{animation:buzz .45s linear 2}
+@keyframes buzz{0%,100%{translate:0}25%{translate:-3px 0}75%{translate:3px 0}}
+.screen{flex:1;min-height:0;background:#0F1419;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.device.phone .screen{border-radius:36px}
+.sbar{display:flex;justify-content:space-between;align-items:center;padding:12px 22px 4px;font-size:14px;font-weight:700}
+.sbar .notch{width:92px;height:22px;border-radius:14px;background:#050607}
+.batt{width:22px;height:11px;border:1.5px solid var(--ink);border-radius:3px;padding:1px}.batt i{display:block;height:100%;width:72%;background:var(--ink);border-radius:1px}
+.chrome{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#1A2027;border-bottom:1px solid var(--line)}
+.chrome i{width:10px;height:10px;border-radius:50%;background:#3A424B}
+.chrome span{flex:1;background:#0F1419;border-radius:6px;padding:3px 10px;font-size:13px;color:var(--dim)}
+.device.phone .chrome{display:none}
+.device.pc .sbar{display:none}
+.appbar{display:flex;align-items:center;justify-content:space-between;padding:8px 16px 10px;gap:8px}
+.logo{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:700;font-size:20px}
+.logo svg{width:22px;height:22px}
+.pill{font-size:13px;border:1px solid var(--line);border-radius:999px;padding:3px 9px;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.pill i{width:8px;height:8px;border-radius:50%;background:var(--hero)}
+.app{flex:1;min-height:0;overflow-y:auto;padding:4px 16px 18px;scrollbar-width:none;display:grid;grid-template-columns:minmax(0,1fr);gap:14px;align-content:start}
+.app::-webkit-scrollbar{display:none}
+.device.pc .app{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px 20px;padding:12px 18px 18px}
+.col{display:flex;flex-direction:column;gap:12px;min-width:0}
+.app h4{font-family:var(--f-sc);font-weight:700;font-size:13px;letter-spacing:.09em;color:var(--dim)}
+.banner{border-radius:14px;padding:10px 14px;background:color-mix(in srgb,var(--gold) 18%,#0F1419);border:1px solid var(--gold);color:var(--gold);font-weight:800;text-align:center}
+.names{display:flex;flex-wrap:wrap;gap:6px}
+.names button{border:1px solid var(--line);background:#151C23;border-radius:999px;padding:4px 10px 4px 5px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.names button i{width:16px;height:16px;border-radius:50%}
+.names button[aria-pressed="true"]{border-color:var(--hero);box-shadow:inset 0 0 0 1px var(--hero)}
+.hint{font-size:13px;color:var(--dim);line-height:1.4}
+.fxg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.fxb{border:1px solid var(--line);background:#151C23;border-radius:12px;padding:10px;cursor:pointer;display:flex;align-items:flex-start;gap:8px;text-align:left;line-height:1.2}
+.fxb i{width:10px;height:10px;border-radius:50%;flex:none;margin-top:3px}
+.fxb b{display:block;font-size:14px}
+.fxb small{display:block;font-size:12px;color:var(--dim);margin-top:2px}
+.target{border:1px solid var(--hero);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:8px;background:color-mix(in srgb,var(--hero) 8%,#0F1419)}
+.target .names button{background:#0F1419}
+.grim{display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
+.spell{border:1px solid var(--line);border-radius:12px;padding:7px 10px;cursor:pointer;display:flex;align-items:center;gap:10px;background:#151C23;text-align:left}
+.spell i{width:28px;height:28px;border-radius:8px;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+.spell span{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.spell strong{font-size:14px}
+.spell small{font-size:12px;color:var(--dim)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px}
+.switch{width:44px;height:26px;border-radius:999px;border:0;background:#2B343D;position:relative;cursor:pointer;flex:none;transition:background .25s}
+.switch i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--ink);transition:transform .25s}
+.switch[aria-checked="true"]{background:var(--hero)}
+.switch[aria-checked="true"] i{transform:translateX(18px)}
+.toast{position:absolute;top:70px;left:50%;transform:translate(-50%,-6px);background:var(--ink);color:var(--bg);font-weight:800;font-size:14px;border-radius:999px;padding:7px 14px;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;white-space:nowrap;z-index:2}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* Paliers */
+.ladder{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.rung{display:grid;grid-template-columns:76px minmax(0,1fr) auto;gap:6px 22px;align-items:start;padding-block:24px;border-top:1px solid var(--line)}
+.rung .n{font-family:var(--f-display);font-weight:800;font-size:3.4rem;line-height:.85;color:var(--scene);transition:color 1.2s}
+.rung h3{font-family:var(--f-display);font-weight:700;font-size:1.6rem;line-height:1.1}
+.rung p{color:var(--dim);max-width:62ch;margin-top:6px}
+.rung .side{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.amount{font-family:var(--f-display);font-weight:800;font-size:1.8rem;line-height:1;white-space:nowrap}
+.cond{font-size:14px;color:var(--gold);border:1px solid rgba(244,200,108,.45);border-radius:10px;padding:4px 10px;max-width:30ch;text-align:right;line-height:1.35}
+.see{border:0;background:transparent;padding:0;cursor:pointer;font-weight:800;color:var(--scene);transition:color 1.2s;white-space:nowrap}
+.see:hover{text-decoration:underline;text-underline-offset:4px}
+.prov{font-size:14px;color:var(--dim)}
+.disp{margin-top:12px;border-radius:10px;background:#07090B;border:1px solid #222A31;padding:10px 12px;font-size:13px;display:flex;flex-direction:column;gap:8px;max-width:520px}
+.disp .ord{display:flex;flex-wrap:wrap;gap:6px;align-items:center;color:var(--dim)}
+.disp .ord b{color:var(--ink);font-weight:700}
+.disp .ord b.now{color:var(--gold)}
+.disp .hp{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.disp .hp span{display:flex;flex-direction:column;gap:3px;color:var(--dim);font-size:12px}
+.disp .hp i{height:5px;border-radius:3px;background:#2B343D;position:relative;overflow:hidden}
+.disp .hp i::after{content:"";position:absolute;inset:0 auto 0 0;width:var(--v);background:#5FD08F}
+.how{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;list-style:none;margin:0;padding:0}
+.how li{background:var(--panel);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:6px}
+.how strong{font-family:var(--f-display);font-size:1.3rem;font-weight:700}
+.how span{color:var(--dim);font-size:15px;line-height:1.45}
+footer{border-top:1px solid var(--line);padding-top:20px;color:var(--dim);font-size:14px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 24px}
+
+body.app-open .page{padding-right:calc(var(--dockw) + 64px)}
+@media (max-width:1000px){
+  .hero,.app-intro{grid-template-columns:minmax(0,1fr);align-items:start}
+  .points,.how{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:900px){
+  .dock{left:0;right:0;bottom:0;top:auto;transform:none;align-items:stretch;gap:0}
+  .dock-bar{justify-content:flex-end;padding:6px 10px;background:rgba(12,16,19,.92)}
+  .dock-bar .seg{display:none}
+  .device.phone,.device.pc{width:100%;height:56vh;border-radius:20px 20px 0 0;padding:6px 6px 0}
+  .device.phone .screen{border-radius:16px 16px 0 0}
+  .device .sbar{display:none}
+  body.app-open .page{padding-right:clamp(16px,4vw,40px);padding-bottom:62vh}
+  body.app-open .board{position:sticky;top:env(safe-area-inset-top,0px);z-index:4}
+}
+@media (max-width:720px){
+  .rung{grid-template-columns:52px minmax(0,1fr)}
+  .rung .n{font-size:2.6rem}
+  .rung .side{grid-column:2;align-items:flex-start}
+  .cond{text-align:left}
+  .cap{font-size:14px;padding:8px 10px}
+  .cap b{font-size:16px}
+}
+@media (prefers-reduced-motion: reduce){
+  :root{transition:none}
+  .device.buzz{animation:none}
+  .page{transition:none}
+}
+</style>
+
+<div class="page">
+  <a class="btn" href="index.html" style="align-self:flex-start;text-decoration:none">← Retour au site</a>
+  <header class="hero">
+    <div>
+      <span class="brand">The Table · la démo</span>
+      <h1>La table, <em>côté MJ et côté joueurs</em></h1>
+    </div>
+    <div class="hero-side">
+      <p class="lede">Un écran de 43 pouces posé à plat au centre de la table, qui projette cartes, images et informations, et un ruban de lumière tout autour. Le MJ pilote l’ensemble, les joueurs y déclenchent les effets de leurs pouvoirs.</p>
+      <div class="ctas">
+        <button class="btn primary" type="button" id="go-table">Piloter la table</button>
+        <a class="btn" href="#appli" style="text-decoration:none">Voir l’appli des joueurs</a>
+      </div>
+      <p class="status">Démo simulée · la table est en cours de fabrication</p>
+    </div>
+  </header>
+
+  <section class="sec" id="table" aria-labelledby="tb-h">
+    <div class="sec-h">
+      <span class="k">Côté MJ</span>
+      <h2 id="tb-h">Piloter la table</h2>
+      <p>Le MJ a deux façons de piloter la table : depuis The Screen, son gestionnaire de campagne, ou depuis une télécommande sur son téléphone. Les commandes ci-dessous font la même chose.</p>
+    </div>
+    <ul class="points">
+      <li><strong>La carte sous les figurines</strong><span>Le MJ projette ses cartes avec un brouillard de guerre, des images et des informations. Grille d’un pouce : 37 × 21 cases, une figurine par case.</span></li>
+      <li><strong>Des ambiances créées par le MJ</strong><span>Le MJ crée ses ambiances selon les besoins de sa campagne. Les couleurs glissent de l’une à l’autre en douceur.</span></li>
+      <li><strong>Le tour de chacun</strong><span>En combat, la portion du cadre devant le joueur actif s’allume. Au tour des monstres, tout le cadre vire au rouge, sans clignoter.</span></li>
+    </ul>
+    <div class="board" id="board">
+      <canvas id="cv" role="img" aria-label="La table vue de dessus"></canvas>
+      <div class="cap" aria-live="polite"><b id="cap-t">Donjon</b><span id="cap-x">pierre froide, torches aux angles</span><em id="cap-turn" hidden></em></div>
+    </div>
+    <div class="gm" aria-label="Commandes du MJ : ambiances et tour de jeu">
+      <span>Ambiances</span>
+      <div class="chips" id="scenes"></div>
+      <button type="button" class="chip turn" id="next">Tour suivant</button>
+      <button type="button" class="chip" id="end">Fin du combat</button>
+      <label class="lum" for="bright">Luminosité <input type="range" id="bright" min="15" max="100" value="50"><output id="bright-out" for="bright">50 %</output></label>
+    </div>
+    <div class="gm" aria-label="Commandes du MJ : effets">
+      <span>Effets du MJ</span>
+      <div class="chips">
+        <button type="button" class="chip" data-mjfx="crit">Coup critique</button>
+        <button type="button" class="chip" data-mjfx="dmg">Dégâts</button>
+        <button type="button" class="chip" data-mjfx="bolt">Éclair</button>
+        <button type="button" class="chip" data-mjfx="heal">Soin</button>
+      </div>
+    </div>
+    <p class="prov">Les six ambiances de cette démo sont des exemples. Avec The Screen, le tour de jeu, les dégâts et les critiques partent d’eux-mêmes pendant le combat.</p>
+  </section>
+
+  <section class="sec" id="appli" aria-labelledby="ap-h">
+    <div class="sec-h">
+      <span class="k">Côté joueurs</span>
+      <h2 id="ap-h">Déclencher ses pouvoirs sur la table</h2>
+      <p>Chaque joueur rejoint la table depuis son téléphone ou son ordinateur et choisit simplement son nom : le MJ l’a déjà placé autour de la table et a associé ses pouvoirs à son personnage. Ouvrez l’appli, choisissez un personnage et lancez ses pouvoirs : la table réagit.</p>
+    </div>
+    <div class="app-intro">
+      <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+        <ul class="feat">
+          <li><b>Quatre effets de base</b><span>Réussite critique, soin, sort et attaque, pour tous les joueurs.</span></li>
+          <li><b>Des effets vus par toute la table</b><span>Ils partent de la place du joueur puis gagnent tout le cadre. Le soin file vers l’allié choisi.</span></li>
+          <li><b>Un grimoire par personnage <em class="lvl">palier 2</em></b><span>Six effets propres aux pouvoirs du personnage : boule de feu, second souffle, lumière sacrée…</span></li>
+          <li><b>Une tablette par joueur <em class="lvl">palier 2</em></b><span>Gravée à son nom, elle s’allume à son tour et quand il lance un pouvoir.</span></li>
+          <li><b>Sons et effets visuels personnalisés <em class="lvl">palier 3</em></b><span>Chaque joueur choisit le son et les effets visuels de ses pouvoirs.</span></li>
+          <li><b>Le MJ garde la main</b><span>Il peut limiter les effets au tour du joueur, ou les couper le temps d’une scène.</span></li>
+        </ul>
+        <div class="ctas">
+          <button class="btn primary" type="button" id="open-app">Ouvrir l’appli</button>
+          <button class="btn" type="button" id="tablets-btn" aria-pressed="false">Afficher les tablettes</button>
+        </div>
+      </div>
+      <div class="tab-card">
+        <h3>La tablette du joueur <em class="lvl">palier 2</em></h3>
+        <div class="viz"><div class="plexi" id="plexi">Sialé</div><div class="shelf" id="shelf-name">Sialé</div><span class="mini-fig"></span><span class="dice" style="left:20%;background:#E5534B;transform:rotate(14deg)"></span><span class="dice" style="left:27%;background:#F4C86C;transform:rotate(-10deg)"></span></div>
+        <p>Environ 12 × 10 cm, clipsée sur la table face au joueur, avec un emplacement pour sa figurine. Son nom est gravé sur la tablette et sur sa plaque de plexiglas, qui s’allume à son tour.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="cg-h">
+    <div class="sec-h">
+      <span class="k">La cagnotte</span>
+      <h2 id="cg-h">Ce que la cagnotte débloque</h2>
+      <p>La table de base fait tout ce qui est décrit côté MJ. L’appli des joueurs, les tablettes, les sons et effets visuels personnalisés, l’afficheur et les cartes dynamiques se débloquent palier par palier, par une cagnotte entre joueurs.</p>
+    </div>
+    <div class="ctas"><a class="btn primary" href="cagnotte.html" style="text-decoration:none">Voir la cagnotte</a></div>
+    <ol id="ladder" hidden></ol>
+  </section>
+
+  <footer>
+    <span>The Table · en cours de fabrication</span>
+    <span>Démo simulée : le vrai ruban est bien plus lumineux qu’un écran.</span>
+  </footer>
+</div>
+
+<div class="dock" id="dock" role="dialog" aria-label="Appli joueur" hidden>
+  <div class="dock-bar">
+    <div class="seg" id="mode" aria-label="Affichage"><button type="button" data-v="phone" aria-pressed="true">Téléphone</button><button type="button" data-v="pc" aria-pressed="false">Ordinateur</button></div>
+    <button type="button" class="close" id="close-app" aria-label="Fermer l’appli">×</button>
+  </div>
+  <div class="device phone" id="device">
+    <div class="screen">
+      <div class="sbar"><span>21:42</span><span class="notch" aria-hidden="true"></span><span class="batt" aria-hidden="true"><i></i></span></div>
+      <div class="chrome" aria-hidden="true"><i></i><i></i><i></i><span>the-table.local/joueur</span></div>
+      <div class="appbar">
+        <span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2 21 7v10l-9 5-9-5V7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 2v6m0 0 9-1m-9 1L3 7m9 1-6 9h12z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Ma table</span>
+        <span class="pill"><i></i><span id="who">Sialé</span></span>
+      </div>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+      <div class="app">
+        <div class="col">
+          <div class="banner" id="banner" hidden>C’est ton tour !</div>
+          <h4>Qui es-tu ?</h4>
+          <div class="names" id="names"></div>
+          <p class="hint" id="seat-info"></p>
+          <h4>Effets de base</h4>
+          <div class="fxg" id="base"></div>
+          <div class="target" id="target" hidden><span class="hint" id="target-q">Vers qui ?</span><div class="names" id="target-list"></div><button type="button" class="see" id="target-cancel" style="align-self:flex-start;color:var(--dim)">Annuler</button></div>
+          <div class="row"><span>Son des pouvoirs <em class="lvl">palier 3</em></span><button type="button" class="switch" id="snd" role="switch" aria-checked="false" aria-label="Son des pouvoirs"><i></i></button></div>
+        </div>
+        <div class="col">
+          <h4><span id="grim-h">Grimoire</span> <em class="lvl">palier 2</em></h4>
+          <div class="grim" id="grim"></div>
+          <p class="hint">Ton MJ peut limiter les effets à ton tour, ou les couper le temps d’une scène.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s);};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s));};
+var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- couleurs et bruit ---------- */
+var hx=function(x){var v=Math.sin(x*127.1+311.7)*43758.5453;return v-Math.floor(v);};
+var noise=function(x){var i=Math.floor(x),f=x-i,u=f*f*(3-2*f);return hx(i)*(1-u)+hx(i+1)*u;};
+var C=function(h){return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];};
+var mix=function(a,b,t){t=t<0?0:t>1?1:t;return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t,a[2]+(b[2]-a[2])*t];};
+var mul=function(c,k){return [c[0]*k,c[1]*k,c[2]*k];};
+var grad=function(p,t){return t<0.5?mix(p[0],p[1],t*2):mix(p[1],p[2],(t-0.5)*2);};
+
+/* ---------- ruban : 195 pixels, sens horaire depuis l'angle haut-gauche ---------- */
+var SIDES=[60,37,61,37],PX=[];
+SIDES.forEach(function(n,s){for(var j=0;j<n;j++)PX.push({s:s,u:(j+0.5)/n,i:PX.length});});
+var N=PX.length,CORNERS=[0,60,97,158];
+var cornerDist=function(i){var m=1e9;for(var k=0;k<4;k++){var d=Math.abs(i-CORNERS[k]);d=Math.min(d,N-d);if(d<m)m=d;}return m;};
+var cdist=function(i,j){var d=Math.abs(i-j);return Math.min(d,N-d);};
+var fwd=function(from,i,dir){var d=(i-from)*dir;return ((d%N)+N)%N;};
+
+var FLAME=['#8B2E00','#FF7A1A','#FFB347'].map(C);
+var env=function(dt,r,h,f){if(dt<r){var x=dt/r;return x*x*(3-2*x);}dt-=r;if(dt<h)return 1;var y=Math.min(1,(dt-h)/f);return 1-y*y*(3-2*y);};
+// Valeur lissée le long du ruban qui évolue SUR PLACE : chaque point d'ancrage a sa propre horloge, rien ne défile autour du cadre.
+var field=function(i,t,sp,speed,seed){var M=Math.max(3,Math.round(N/sp)),x=i/N*M,k=Math.floor(x),f=x-k,u=f*f*(3-2*f);var a=noise(t*speed+hx(k*17.31+seed)*997),b=noise(t*speed+hx(((k+1)%M)*17.31+seed)*997);return a*(1-u)+b*u;};
+var flick=function(i,t,speed){return noise(t*speed+hx(i*3.71+0.5)*613);};
+var flame=function(i,t,pal,sp){var n=0.62*field(i,t,4,1.2*sp,11)+0.38*flick(i,t,5.5*sp);return mul(grad(pal,n),0.38+0.62*n);};
+// Éclair : trois coups rapides puis une rémanence ; plein sur un côté, il déborde sur les côtés voisins.
+var bolt=function(p,dt,side,hit){var w=p.s===side?1:(Math.abs(p.s-side)===2?0.12:0.42);var e=Math.exp(-dt*28)+0.75*(dt>0.11?Math.exp(-(dt-0.11)*30):0)+(dt>0.27?Math.exp(-(dt-0.27)*12):0)+0.3*Math.exp(-dt*3.5);var d=Math.abs(p.u-hit);return Math.min(1,e*w*(0.6+0.4*Math.exp(-d*d*10)));};
+var SCENES=[
+ {id:'taverne',name:'Taverne',effect:'lueur ambrée qui respire sur place, bougies qui vacillent',mood:'feu de cheminée, bougies',sub:'feu de cheminée, bougies',accent:'#FFA94D',pal:['#6E2A05','#E07A22','#FFC870'],
+  f:function(p,t){var b=field(p.i,t,8,0.3,1),fl=flick(p.i,t,4);var c=mix(this.P[0],this.P[1],0.3+0.55*b);if(p.i%26<2)c=mix(c,this.P[2],0.75*(0.65+0.35*flick(p.i,t,7)));return mul(c,0.52+0.28*b+0.14*(fl-0.5));}},
+ {id:'foret',name:'Forêt',effect:'verts qui ondulent sur place, rayons de soleil ponctuels',mood:'feuillage, lumière filtrée',sub:'lumière filtrée par les feuilles',accent:'#86D063',pal:['#0E4A22','#5DB043','#F2DE7A'],
+  f:function(p,t){var c=mix(this.P[0],this.P[1],field(p.i,t,9,0.25,5));var r=field(p.i,t,16,0.12,6);if(r>0.68)c=mix(c,this.P[2],(r-0.68)*2.4);return mul(c,0.75);}},
+ {id:'donjon',name:'Donjon',effect:'pierre froide, torches qui vacillent aux angles',mood:'pierre humide, torches',sub:'pierre froide, torches aux angles',accent:'#93A9DD',pal:['#26324F','#5B6B8C','#FF8A2A'],
+  f:function(p,t){var d=cornerDist(p.i);var c=mul(mix(this.P[0],this.P[1],field(p.i,t,10,0.15,7)*0.5),0.45);if(d<5)c=mix(c,flame(p.i,t,FLAME,1.3),1-d/5);return c;}},
+ {id:'combat',name:'Combat',effect:'rouge profond qui gonfle et retombe (~5 s), sans clignoter',mood:'tension tenable sur 3 h',sub:'un rouge profond qui respire',accent:'#F0544A',pal:['#4A0503','#FF2416','#FF7A3D'],
+  f:function(p,t){var b=field(p.i,t,10,0.3,3);return mul(mix(this.P[0],this.P[1],0.45+0.5*b),0.58+0.22*b+0.14*Math.sin(t*1.25));}},
+ {id:'orage',name:'Orage',effect:'nuit bleue, éclairs en plusieurs coups qui débordent sur les côtés voisins',mood:'tempête',sub:'des éclairs qui frappent la table',accent:'#A9C1FF',pal:['#060C22','#22356E','#EEF4FF'],
+  f:function(p,t){var c=mul(mix(this.P[0],this.P[1],field(p.i,t,9,0.22,4)),0.55);var a=0;for(var j=0;j<2;j++){var L=1.15,k=Math.floor(t/L)-j;if(hx(k*5.13)>0.55)continue;var dt=t-(k*L+hx(k*2.71)*0.5);if(dt<0||dt>1.3)continue;a=Math.max(a,bolt(p,dt,Math.floor(hx(k*9.31)*4),hx(k*6.6)));}return mix(c,this.P[2],a);}},
+ {id:'ocean',name:'Océan',effect:'houle qui monte et redescend, écume',mood:'mer, navire',sub:'la houle monte et redescend',accent:'#3CCBE3',pal:['#0B3D91','#22B8CF','#E6FBFF'],
+  f:function(p,t){var x=p.i/N*6.2832*5;var v=0.5+0.32*Math.sin(x+0.8*Math.sin(t*0.35))*Math.sin(t*0.8+p.s)+0.22*(field(p.i,t,8,0.3,8)-0.5);var c=mix(this.P[0],this.P[1],v);if(v>0.8)c=mix(c,this.P[2],(v-0.8)*3.5);return mul(c,0.8);}},
+ {id:'arcane',name:'Arcane',effect:'violets qui ondoient, étincelles',mood:'magie',sub:'étincelles de magie',accent:'#CA74F2',pal:['#3B1466','#B23BD6','#FFFFFF'],
+  f:function(p,t){var c=mul(mix(this.P[0],this.P[1],field(p.i,t,8,0.4,9)),0.75);if(hx(p.i*13.7+Math.floor(t*10))>0.985)c=mix(c,this.P[2],0.6+0.4*hx(p.i+Math.floor(t*10)));return c;}},
+ {id:'volcan',name:'Volcan',effect:'magma sombre, éruptions qui jaillissent puis refroidissent',mood:'lave, enfers',sub:'des éruptions qui jaillissent',accent:'#FF6A2A',pal:['#1E0300','#B32000','#FFD24A'],
+  f:function(p,t){var m=field(p.i,t,14,0.16,2);var c=mul(mix(this.P[0],this.P[1],0.2+0.65*m),0.35+0.4*m);for(var j=0;j<3;j++){var L=1.4,k=Math.floor(t/L)-j,dt=t-(k*L+hx(k*3.3)*0.7);if(dt<0||dt>3.2)continue;var ctr=Math.floor(hx(k*7.17)*N),d=Math.abs(p.i-ctr);d=Math.min(d,N-d);var a=env(dt,0.35,0.25,2.4)*Math.exp(-Math.pow(d/(3+dt*2.2),2));c=mix(c,dt<0.8?this.P[2]:mix(this.P[2],[255,106,26],Math.min(1,(dt-0.8)/1.5)),a);}return c;}},
+ {id:'camp',name:'Nuit au camp',effect:'nuit très douce, feu de camp sur un côté',mood:'bivouac',sub:'un feu de camp sous les étoiles',accent:'#F2B45A',pal:['#0A1E4A','#FF7A1A','#FFB347'],
+  f:function(p,t){if(p.s===2&&p.u>0.35&&p.u<0.65){var e=1-Math.abs(p.u-0.5)/0.15;return mul(flame(p.i,t,FLAME,1.2),0.4+0.6*e);}return mul(this.P[0],0.35+0.15*field(p.i,t,10,0.15,10));}},
+ {id:'ville',name:'Ville de jour',effect:'blanc chaud uni',mood:'neutre, lecture des fiches',sub:'lumière neutre pour lire les fiches',accent:'#F5D7A8',pal:['#FFF1DC','#FFE3BF','#FFD49A'],
+  f:function(){return mul(this.P[1],0.85);}}
+];
+SCENES.forEach(function(s){s.P=s.pal.map(C);});
+var byId={};SCENES.forEach(function(s){byId[s.id]=s;});
+var SHOWN=['taverne','foret','donjon','combat','orage','camp'];
+
+/* ---------- personnages placés par le MJ (MJ sur le petit côté gauche) ---------- */
+var CHARS=[
+ {id:'elra',name:'Elra',cls:'rodeur',label:'rôdeuse',color:'#5FD08F',slot:0,pos:[12,8]},
+ {id:'brom',name:'Brom',cls:'guerrier',label:'guerrier',color:'#F0A63A',slot:1,pos:[14,10]},
+ {id:'kael',name:'Kaël',cls:'barde',label:'barde',color:'#F28CC0',slot:2,pos:[15,8]},
+ {id:'siale',name:'Sialé',cls:'magicien',label:'magicienne',color:'#B08CF5',slot:3,pos:[11,12]},
+ {id:'tobias',name:'Tobias',cls:'clerc',label:'clerc',color:'#63B3F5',slot:4,pos:[13,13]}
+];
+var byChar={};CHARS.forEach(function(c){byChar[c.id]=c;});
+var GOBS=[[22,6],[24,9],[23,11]];
+var ORDER=['elra','gob','brom','kael','siale','tobias'];
+var SLOTS=[{side:0,a:0,b:0.5},{side:0,a:0.5,b:1},{side:1,a:0,b:1},{side:2,a:0,b:0.5},{side:2,a:0.5,b:1}];
+var SEAT_DESC=['à gauche du MJ, près de lui','à gauche du MJ, au bout de la table','en face du MJ','à droite du MJ, au bout de la table','à droite du MJ, près de lui'];
+SLOTS.forEach(function(s){var idx=[];for(var k=0;k<N;k++){var p=PX[k];if(p.s===s.side&&p.u>=s.a&&p.u<s.b)idx.push(k);}s.center=idx[Math.floor(idx.length/2)];});
+var GM_CENTER=(function(){var best=0,bd=9;PX.forEach(function(p){if(p.s===3&&Math.abs(p.u-0.5)<bd){bd=Math.abs(p.u-0.5);best=p.i;}});return best;})();
+var RAINBOW=[[255,90,90],[255,200,80],[120,230,120],[90,170,255],[200,120,255]];
+
+/* ---------- pouvoirs ---------- */
+var BASE=[
+ {n:'Réussite critique',d:'tout le cadre éclate en or',c:'#F4C86C',fx:{type:'crit'},snd:'fanfare'},
+ {n:'Soin',d:'vers l’allié de ton choix',c:'#7CF0A0',target:true,fx:{type:'travel',ally:true,color:[110,240,160],burst:[200,255,220],pillar:true},snd:'chime'},
+ {n:'Sort',d:'un trait magique vers les monstres',c:'#B9A4FF',fx:{type:'travel',color:[185,164,255],burst:[230,220,255],flood:0.35},snd:'zap'},
+ {n:'Attaque',d:'un coup qui frappe côté monstres',c:'#FFB27A',fx:{type:'travel',color:[255,200,150],burst:[255,240,220],fast:true,flash:0.5},snd:'slash'}
+];
+var CLASSES={
+ rodeur:{title:'Grimoire de rôdeuse',spells:[
+  {n:'Volée de flèches',d:'quatre traits vers les monstres',c:'#C9F27A',fx:{type:'multi',color:[200,242,122],burst:[235,255,200]},snd:'slash'},
+  {n:'Tir précis',d:'un trait très rapide',c:'#E9FFB0',fx:{type:'travel',color:[220,255,170],burst:[250,255,230],fast:true,flash:0.4},snd:'slash'},
+  {n:'Marque du chasseur',d:'la cible reste marquée de rouge',c:'#FF5A4A',fx:{type:'mark',color:[255,70,55]},snd:'zap'},
+  {n:'Pas brumeux',d:'une brume argentée envahit la table',c:'#C8DAFF',fx:{type:'wave',color:[200,218,255],speed:70,width:10,glow:0.35},snd:'whoosh'},
+  {n:'Grêle d’épines',d:'des épines s’abattent partout',c:'#9BE07A',fx:{type:'shimmer',color:[160,230,120]},snd:'slash'},
+  {n:'Communion avec la nature',d:'une vague verte apaisante',c:'#5FD08F',fx:{type:'wave',color:[95,208,143],speed:45,width:16,glow:0.4},snd:'whoosh'}]},
+ guerrier:{title:'Techniques de guerrier',spells:[
+  {n:'Second souffle',d:'un regain que toute la table ressent',c:'#7CF0A0',fx:{type:'wave',color:[120,240,160],speed:80,width:12,glow:0.45},snd:'whoosh'},
+  {n:'Fureur',d:'une vague de braises rouges',c:'#FF4A2A',fx:{type:'wave',color:[255,70,40],speed:60,width:14,glow:0.4,ember:true},snd:'boom'},
+  {n:'Attaque tourbillon',d:'une onde dorée qui fait le tour',c:'#FFD27A',fx:{type:'wave',color:[255,210,122],speed:150,width:5,glow:0},snd:'slash'},
+  {n:'Frappe puissante',d:'un impact qui fait trembler la table',c:'#FFB27A',fx:{type:'travel',color:[255,190,130],burst:[255,240,220],fast:true,flash:0.7},snd:'boom'},
+  {n:'Cri de guerre',d:'toute la table se lève',c:'#FFF0C0',fx:{type:'wave',color:[255,240,192],speed:120,width:20,glow:0.5},snd:'fanfare'},
+  {n:'Parade',d:'un bouclier sur ta place',c:'#8FB8FF',fx:{type:'shield',color:[140,180,255]},snd:'shield'}]},
+ barde:{title:'Répertoire de barde',spells:[
+  {n:'Inspiration',d:'des notes qui filent vers un allié',c:'#F28CC0',target:true,fx:{type:'travel',ally:true,color:[242,140,192],burst:[255,225,245],pillar:true},snd:'chime'},
+  {n:'Mot de guérison',d:'un soin envoyé à un allié',c:'#7CF0A0',target:true,fx:{type:'travel',ally:true,color:[120,240,160],burst:[200,255,220],pillar:true},snd:'chime'},
+  {n:'Fracasse',d:'une onde de choc qui fait le tour',c:'#E0B0FF',fx:{type:'wave',color:[224,176,255],speed:170,width:5,glow:0.2},snd:'boom'},
+  {n:'Vague tonnante',d:'une déferlante qui balaie la table',c:'#CFE3FF',fx:{type:'wave',color:[207,227,255],speed:110,width:18,glow:0.5},snd:'thunder'},
+  {n:'Fou rire',d:'des couleurs qui pétillent partout',c:'#FFD36E',fx:{type:'shimmer',color:null},snd:'chime'},
+  {n:'Chant de repos',d:'chaque place reçoit un peu de douceur',c:'#F7B6D6',fx:{type:'allseats',color:[247,182,214]},snd:'chime'}]},
+ magicien:{title:'Grimoire de magicienne',spells:[
+  {n:'Boule de feu',d:'part de ta place et embrase la table',c:'#FF7A1A',fx:{type:'travel',color:[255,140,40],burst:[255,205,90],big:true,flood:0.7},snd:'boom'},
+  {n:'Rayon de givre',d:'un trait glacé, puis le givre gagne tout',c:'#8FE3FF',fx:{type:'travel',color:[160,230,255],burst:[230,250,255],fast:true,flood:0.5},snd:'ice'},
+  {n:'Nova arcanique',d:'un anneau violet qui fait le tour',c:'#B06BFF',fx:{type:'wave',color:[176,107,255],speed:140,width:7,glow:0.35},snd:'zap'},
+  {n:'Projectile magique',d:'trois éclats qui ne ratent jamais',c:'#C9B6FF',fx:{type:'multi',color:[200,182,255],burst:[240,235,255],n:3},snd:'zap'},
+  {n:'Éclair',d:'la foudre frappe la table',c:'#E6EEFF',fx:{type:'storm'},snd:'thunder'},
+  {n:'Bouclier',d:'un voile protecteur sur ta place',c:'#8FB8FF',fx:{type:'shield',color:[150,170,255]},snd:'shield'}]},
+ clerc:{title:'Prières de clerc',spells:[
+  {n:'Lumière sacrée',d:'une lumière blanc-or inonde la table',c:'#FFF1B0',fx:{type:'wave',color:[255,241,190],speed:90,width:20,glow:0.6},snd:'fanfare'},
+  {n:'Soins de groupe',d:'chaque place reçoit un soin',c:'#7CF0A0',fx:{type:'allseats',color:[120,240,160]},snd:'chime'},
+  {n:'Mot de guérison',d:'un soin envoyé à un allié',c:'#9CF5B8',target:true,fx:{type:'travel',ally:true,color:[150,245,184],burst:[210,255,225],pillar:true},snd:'chime'},
+  {n:'Flamme sacrée',d:'une flamme dorée tombe sur les monstres',c:'#FFC24A',fx:{type:'travel',color:[255,200,90],burst:[255,240,200],flash:0.5},snd:'zap'},
+  {n:'Esprits gardiens',d:'des esprits dorés tournent autour de la table',c:'#FFE08A',fx:{type:'wave',color:[255,224,138],speed:50,width:8,glow:0.3},snd:'whoosh'},
+  {n:'Bénédiction',d:'des étincelles dorées sur toute la table',c:'#FFE9A8',fx:{type:'shimmer',color:[255,233,168]},snd:'chime'}]}
+};
+
+/* ---------- état ---------- */
+var FX_MIN=0.6; // luminosité minimale des effets des joueurs, à régler avec le matériel
+var S={scene:byId.donjon,prev:null,mixAt:0,bright:0.5,turn:-1,prevTurn:-1,turnAt:-10,fx:[],me:'siale',tablets:false,sound:false,plexi:{}};
+var T0=performance.now();
+var now=function(){return (performance.now()-T0)/1000;};
+var turnChar=function(i){return i<0?null:ORDER[i];};
+
+/* ---------- plateau ---------- */
+var cv=$('#cv'),ctx=cv.getContext('2d'),board=$('#board');
+var G=null,W=0,H=0,dpr=1,mapC=null,bgC=null;
+function layout(){
+  dpr=Math.min(2,window.devicePixelRatio||1);
+  W=board.clientWidth||700;
+  var m=Math.round(Math.max(44,(0.0989*W+30)/1.1978));
+  var bw=W-2*m,bh=bw*627/1011;
+  H=Math.round(bh+2*m);
+  cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr);cv.style.height=H+'px';
+  var x0=m,y0=m,x1=W-m,y1=m+bh,fr=Math.max(8,bw*0.022),ins=fr*0.45;
+  var ax=x0+ins,ay=y0+ins,bx=x1-ins,by=y1-ins;
+  var pts=PX.map(function(p){
+    if(p.s===0)return [ax+(bx-ax)*p.u,ay];
+    if(p.s===1)return [bx,ay+(by-ay)*p.u];
+    if(p.s===2)return [bx-(bx-ax)*p.u,by];
+    return [ax,by-(by-ay)*p.u];
+  });
+  var b=fr*1.2;
+  G={ppm:bw/1011,ax:ax,ay:ay,bx:bx,by:by,m:m,x0:x0,y0:y0,x1:x1,y1:y1,fr:fr,pts:pts,sx:x0+b,sy:y0+b,sw:x1-x0-2*b,sh:y1-y0-2*b};
+  buildBg();buildMap();
+}
+function buildBg(){
+  bgC=document.createElement('canvas');bgC.width=cv.width;bgC.height=cv.height;
+  var g=bgC.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+  g.fillStyle='#17110C';g.fillRect(0,0,W,H);
+  for(var i=0;i<26;i++){var y=hx(i*3.1)*H,h=4+hx(i*7.7)*18;g.fillStyle='rgba(255,220,180,'+(0.012+hx(i*1.3)*0.02)+')';g.fillRect(0,y,W,h);}
+}
+var ROOMS=[[5,5,17,16],[21,3,32,13],[17,8,21,11],[22,14,31,19],[25,13,27,14],[2,9,5,12]];
+var isFloor=function(x,y){for(var r=0;r<ROOMS.length;r++){var R=ROOMS[r];if(x>=R[0]&&x<R[2]&&y>=R[1]&&y<R[3])return true;}return false;};
+function buildMap(){
+  var sw=G.sw,sh=G.sh,cw=sw/37,ch=sh/21;
+  mapC=document.createElement('canvas');mapC.width=Math.round(sw*dpr);mapC.height=Math.round(sh*dpr);
+  var g=mapC.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);
+  g.fillStyle='#101317';g.fillRect(0,0,sw,sh);
+  for(var x=0;x<37;x++)for(var y=0;y<21;y++){var v=hx(x*37+y*101);
+    if(isFloor(x,y)){var l=40+Math.round(v*10);g.fillStyle='rgb('+l+','+(l+3)+','+(l+9)+')';}else g.fillStyle='rgba(255,255,255,'+(0.01+v*0.02)+')';
+    g.fillRect(x*cw,y*ch,cw+0.5,ch+0.5);}
+  g.strokeStyle='rgba(255,255,255,0.08)';g.lineWidth=1;g.beginPath();
+  for(var i=1;i<37;i++){var X=Math.round(i*cw)+0.5;g.moveTo(X,0);g.lineTo(X,sh);}
+  for(var j=1;j<21;j++){var Y=Math.round(j*ch)+0.5;g.moveTo(0,Y);g.lineTo(sw,Y);}
+  g.stroke();
+  g.strokeStyle='#7A8290';g.lineWidth=Math.max(1.5,cw*0.14);g.beginPath();
+  for(x=0;x<37;x++)for(y=0;y<21;y++){if(!isFloor(x,y))continue;
+    if(!isFloor(x,y-1)){g.moveTo(x*cw,y*ch);g.lineTo((x+1)*cw,y*ch);}
+    if(!isFloor(x,y+1)){g.moveTo(x*cw,(y+1)*ch);g.lineTo((x+1)*cw,(y+1)*ch);}
+    if(!isFloor(x-1,y)){g.moveTo(x*cw,y*ch);g.lineTo(x*cw,(y+1)*ch);}
+    if(!isFloor(x+1,y)){g.moveTo((x+1)*cw,y*ch);g.lineTo((x+1)*cw,(y+1)*ch);}}
+  g.stroke();
+  var vg=g.createRadialGradient(sw/2,sh/2,Math.min(sw,sh)*0.3,sw/2,sh/2,Math.max(sw,sh)*0.7);
+  vg.addColorStop(0,'rgba(0,0,0,0)');vg.addColorStop(1,'rgba(0,0,0,0.55)');g.fillStyle=vg;g.fillRect(0,0,sw,sh);
+}
+function rgba(c,a){return 'rgba('+Math.min(255,c[0]|0)+','+Math.min(255,c[1]|0)+','+Math.min(255,c[2]|0)+','+a+')';}
+
+function turnTint(c,idx,p){
+  var id=turnChar(idx);if(!id)return c;
+  if(id==='gob')return mix(mul(c,0.85),[255,22,14],0.62);
+  var st=SLOTS[byChar[id].slot];
+  if(p.s===st.side&&p.u>=st.a&&p.u<st.b)return mix(c,[255,214,130],0.7);
+  return mul(c,0.4);
+}
+function pixel(p,t){
+  var c=S.scene.f(p,t);
+  if(S.prev){var k=(t-S.mixAt)/1.2;if(k<1)c=mix(S.prev.f(p,t),c,k);}
+  var kt=reduce?1:Math.min(1,(t-S.turnAt)/0.9);
+  c=kt<1?mix(turnTint(c,S.prevTurn,p),turnTint(c,S.turn,p),kt):turnTint(c,S.turn,p);
+  c=mul(c,S.bright);
+  // les effets des joueurs s'affichent au moins à FX_MIN, quel que soit le réglage des ambiances
+  var fb=Math.max(S.bright,FX_MIN);
+  for(var e=0;e<S.fx.length;e++){var F=S.fx[e],dt=t-F.t;if(dt<0||dt>F.d)continue;var a=0,col=F.col,d;
+    if(F.type==='travel'){
+      var s=F.L*Math.min(1,dt/F.tt),f=fwd(F.from,p.i,F.dir);
+      if(f<=s&&f<=F.L){var bh=s-f;a=Math.max(Math.exp(-bh*bh/(F.big?7:3)),0.6*Math.exp(-bh/(F.big?14:8)));if(dt>F.tt)a*=Math.exp(-(dt-F.tt)*5);}
+      if(dt>F.tt){var db=dt-F.tt;d=cdist(p.i,F.to);
+        var bb=env(db,0.05,0.12,F.big?1.2:0.8)*Math.exp(-Math.pow(d/((F.big?5:3)+db*(F.big?14:8)),2));
+        if(F.pillar)bb=Math.max(bb,env(db,0.1,0.6,1.0)*Math.exp(-Math.pow(d/5,2)));
+        if(bb>a){a=bb;col=F.burst;}
+        if(F.flood){var fl=F.flood*env(db,0.06,0.25,1.2)*Math.max(0,Math.min(1,1-(d-db*150)/12));if(fl>a){a=fl;col=F.burst;}}
+        if(F.flash){var fa=F.flash*(db<0.04?db/0.04:Math.exp(-(db-0.04)*7));if(fa>a){a=fa;col=F.burst;}}
+      }
+    } else if(F.type==='wave'){
+      d=cdist(p.i,F.center);var fr=dt*F.speed;
+      a=fr<N/2+F.width*2?Math.exp(-Math.pow((d-fr)/F.width,2)):0;
+      if(F.glow&&d<=fr)a=Math.max(a,F.glow*env(dt,0.3,0.6,1.4));
+      a=Math.max(a,0.6*env(dt,0.05,0.15,0.5)*Math.exp(-d*d/30));
+      if(F.ember)a*=0.65+0.35*flick(p.i,t,9);
+    } else if(F.type==='pillar'){d=cdist(p.i,F.center);a=env(dt,0.15,0.5,1.3)*Math.exp(-Math.pow(d/(4+dt*4),2));}
+    else if(F.type==='shield'){d=cdist(p.i,F.center);a=0.85*env(dt,0.25,1.0,0.9)*Math.exp(-Math.pow(d/14,4));}
+    else if(F.type==='mark'){d=cdist(p.i,F.center);a=0.9*env(dt,0.2,1.6,0.8)*Math.exp(-Math.pow(d/10,4));}
+    else if(F.type==='shimmer'){var on=hx(p.i*9.13+Math.floor(t*12)*1.7+F.seed)>0.8;a=env(dt,0.2,F.d-1.0,0.8)*(on?0.95:0.14);if(!F.col)col=RAINBOW[Math.floor(hx(p.i*3.3+Math.floor(t*6))*RAINBOW.length)];}
+    else if(F.type==='storm'){for(var j=0;j<3;j++){var btt=dt-F.off[j];if(btt>0&&btt<1.3)a=Math.max(a,bolt(p,btt,F.sides[j],F.hits[j]));}col=[235,242,255];}
+    else if(F.type==='dmg'){a=0.92*(dt<0.04?dt/0.04:Math.exp(-(dt-0.04)*3.2));}
+    else if(F.type==='crit'){var a1=dt<0.04?dt/0.04:Math.exp(-(dt-0.04)*9),sp=hx(p.i*7.3+Math.floor(dt*22))>0.82?Math.exp(-dt*1.1):0;
+      c=mix(c,mul([255,190,60],fb),0.9*env(dt,0.05,0.35,1.6));col=[255,250,225];a=Math.max(a1,0.9*sp);}
+    if(a>0)c=mix(c,mul(col,fb),Math.min(1,a));
+  }
+  return c;
+}
+
+function draw(t){
+  if(!G)return;
+  if(S.prev&&(t-S.mixAt)>=1.2)S.prev=null;
+  S.fx=S.fx.filter(function(F){return t-F.t<=F.d;});
+  var cols=new Array(N),k;
+  for(k=0;k<N;k++)cols[k]=pixel(PX[k],t);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.globalCompositeOperation='source-over';
+  ctx.drawImage(bgC,0,0,W,H);
+  ctx.globalCompositeOperation='lighter';
+  var r1=G.fr*3.4,r2=G.fr*1.8;
+  for(k=0;k<N;k++){var q=G.pts[k];
+    ctx.fillStyle=rgba(cols[k],0.028);ctx.beginPath();ctx.arc(q[0],q[1],r1,0,6.2832);ctx.fill();
+    ctx.fillStyle=rgba(cols[k],0.04);ctx.beginPath();ctx.arc(q[0],q[1],r2,0,6.2832);ctx.fill();}
+  ctx.globalCompositeOperation='source-over';
+  var active=turnChar(S.turn);
+  if(S.tablets)CHARS.forEach(function(c){drawTablet(c,t,active===c.id);});
+  ctx.fillStyle='#5B3A22';ctx.fillRect(G.x0,G.y0,G.x1-G.x0,G.y1-G.y0);
+  ctx.strokeStyle='rgba(0,0,0,0.4)';ctx.lineWidth=1;ctx.strokeRect(G.x0+0.5,G.y0+0.5,G.x1-G.x0-1,G.y1-G.y0-1);
+  ctx.drawImage(mapC,G.sx,G.sy,G.sw,G.sh);
+  var cw=G.sw/37,ch=G.sh/21,rad=Math.min(cw,ch)*0.36;
+  var tok=function(ps,col,ring){var X=G.sx+(ps[0]+0.5)*cw,Y=G.sy+(ps[1]+0.5)*ch;
+    if(ring){ctx.strokeStyle=ring;ctx.lineWidth=2;ctx.beginPath();ctx.arc(X,Y,rad+4,0,6.2832);ctx.stroke();}
+    ctx.fillStyle=col;ctx.beginPath();ctx.arc(X,Y,rad,0,6.2832);ctx.fill();ctx.strokeStyle='rgba(0,0,0,0.6)';ctx.lineWidth=1;ctx.stroke();};
+  GOBS.forEach(function(ps){tok(ps,'#E5534B',active==='gob'?'rgba(255,120,110,0.9)':null);});
+  CHARS.forEach(function(c){tok(c.pos,c.color,active===c.id?'rgba(255,220,140,0.95)':null);});
+  ctx.globalCompositeOperation='lighter';
+  var d1=G.fr*0.42,d2=G.fr*0.2;
+  for(k=0;k<N;k++){var pt=G.pts[k];
+    ctx.fillStyle=rgba(cols[k],0.28);ctx.beginPath();ctx.arc(pt[0],pt[1],d1,0,6.2832);ctx.fill();
+    ctx.fillStyle=rgba(cols[k],1);ctx.beginPath();ctx.arc(pt[0],pt[1],d2,0,6.2832);ctx.fill();}
+  ctx.globalCompositeOperation='source-over';
+  var fs=Math.max(12,Math.min(17,W*0.019)),off=Math.max(12,G.m-100*G.ppm-12);
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.font='700 '+fs+'px "Alegreya Sans SC","Alegreya Sans",sans-serif';
+  CHARS.forEach(function(c){var st=SLOTS[c.slot];
+    label(st.side,(st.a+st.b)/2,c.name,active===c.id?'#FFD27A':(active==='gob'?'rgba(255,140,130,0.75)':(c.id===S.me?c.color:'rgba(238,229,212,0.5)')),off);});
+  label(3,0.5,'MJ','rgba(238,229,212,0.3)',Math.max(12,G.m*0.4));
+}
+function label(side,u,txt,col,off){
+  var x,y,rot=0;
+  if(side===0){x=G.ax+(G.bx-G.ax)*u;y=off;}
+  else if(side===2){x=G.bx-(G.bx-G.ax)*u;y=H-off;}
+  else if(side===1){x=W-off;y=G.ay+(G.by-G.ay)*u;rot=Math.PI/2;}
+  else {x=off;y=G.by-(G.by-G.ay)*u;rot=-Math.PI/2;}
+  ctx.save();ctx.translate(x,y);if(rot)ctx.rotate(rot);ctx.fillStyle=col;ctx.fillText(txt,0,0);ctx.restore();
+}
+// Tablette à l'échelle : 120 × 100 mm, plaque de plexi le long du bord côté cadre
+function drawTablet(c,t,turnOn){
+  var st=SLOTS[c.slot],u=(st.a+st.b)/2,w=120*G.ppm,dep=100*G.ppm,pl=130*G.ppm,x,y,rw,rh,px1,py1,px2,py2,fx,fy,rot=0;
+  if(st.side===0){var cx=G.ax+(G.bx-G.ax)*u;x=cx-w/2;y=G.y0-dep;rw=w;rh=dep;px1=cx-pl/2;py1=G.y0-2;px2=cx+pl/2;py2=py1;fx=cx+w*0.28;fy=y+dep*0.4;}
+  else if(st.side===2){var cx2=G.bx-(G.bx-G.ax)*u;x=cx2-w/2;y=G.y1;rw=w;rh=dep;px1=cx2-pl/2;py1=G.y1+2;px2=cx2+pl/2;py2=py1;fx=cx2-w*0.28;fy=y+dep*0.6;rot=0;}
+  else {var cy=G.ay+(G.by-G.ay)*u;x=G.x1;y=cy-w/2;rw=dep;rh=w;px1=G.x1+2;py1=cy-pl/2;px2=px1;py2=cy+pl/2;fx=x+dep*0.6;fy=cy+w*0.28;rot=Math.PI/2;}
+  ctx.fillStyle='#7A5232';ctx.fillRect(x,y,rw,rh);
+  ctx.strokeStyle='rgba(0,0,0,0.5)';ctx.lineWidth=1;ctx.strokeRect(x+0.5,y+0.5,rw-1,rh-1);
+  // figurine posée sur la tablette
+  ctx.fillStyle=c.color;ctx.beginPath();ctx.arc(fx,fy,Math.max(3,12.5*G.ppm),0,6.2832);ctx.fill();
+  ctx.strokeStyle='rgba(0,0,0,0.55)';ctx.stroke();
+  // nom gravé
+  if(w>=48){ctx.save();ctx.translate(x+rw/2+(st.side===1?-dep*0.12:0),y+rh/2+(st.side===0?dep*0.12:st.side===2?-dep*0.12:0));if(rot)ctx.rotate(rot);
+    ctx.font='700 '+Math.max(9,Math.min(13,w*0.13))+'px "Grenze",Georgia,serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillStyle='rgba(40,22,10,0.85)';ctx.fillText(c.name,st.side===2?w*0.12:-w*0.12,0);ctx.restore();}
+  // plaque de plexi : éclairée au tour du joueur, ou à la couleur du pouvoir qu'il vient de lancer
+  var glow=null,pg=S.plexi[c.id];
+  if(turnOn)glow=[255,214,130];else if(pg&&t-pg.t<1.6)glow=pg.col;
+  ctx.lineCap='round';
+  if(glow){ctx.globalCompositeOperation='lighter';ctx.strokeStyle=rgba(glow,0.4);ctx.lineWidth=9;ctx.beginPath();ctx.moveTo(px1,py1);ctx.lineTo(px2,py2);ctx.stroke();ctx.globalCompositeOperation='source-over';}
+  ctx.strokeStyle=glow?'#FFFFFF':'rgba(220,235,255,0.4)';ctx.lineWidth=glow?2.5:1.8;ctx.beginPath();ctx.moveTo(px1,py1);ctx.lineTo(px2,py2);ctx.stroke();
+  ctx.lineCap='butt';
+}
+
+var raf=0,visible=true;
+function frame(){draw(now());raf=requestAnimationFrame(frame);}
+function kick(){cancelAnimationFrame(raf);if(reduce||!visible)draw(reduce?1.3:now());else raf=requestAnimationFrame(frame);}
+function redraw(){if(reduce||!visible)draw(reduce?1.3:now());}
+
+/* ---------- commandes du MJ ---------- */
+var root=document.documentElement,capTurn=$('#cap-turn');
+function setScene(id){
+  var s=byId[id];if(!s)return;
+  if(s!==S.scene){S.prev=reduce?null:S.scene;S.mixAt=now();S.scene=s;}
+  root.style.setProperty('--scene',s.accent);
+  $('#cap-t').textContent=s.name;$('#cap-x').textContent=s.sub;
+  $$('#scenes .chip').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.id===s.id?'true':'false');});
+  redraw();
+}
+function setTurn(i){
+  if(i!==S.turn){S.prevTurn=S.turn;S.turnAt=now();}
+  S.turn=i;var id=turnChar(i);
+  if(!id)capTurn.hidden=true;
+  else{capTurn.hidden=false;capTurn.className=id==='gob'?'red':'';var nm=id==='gob'?'':byChar[id].name;capTurn.textContent=id==='gob'?'Tour des gobelins':(/^[AEIOUYÉÈ]/i.test(nm)?'Au tour d’':'Au tour de ')+nm;}
+  var mine=id===S.me;
+  $('#banner').hidden=!mine;
+  $('#plexi').classList.toggle('lit',mine);
+  if(mine&&!$('#dock').hidden){var dv=$('#device');dv.classList.remove('buzz');void dv.offsetWidth;dv.classList.add('buzz');}
+  redraw();
+}
+var sc=$('#scenes');
+SHOWN.forEach(function(id){var s=byId[id],b=document.createElement('button');b.type='button';b.className='chip';b.dataset.id=id;b.textContent=s.name;b.addEventListener('click',function(){setScene(id);});sc.appendChild(b);});
+$('#next').addEventListener('click',function(){if(S.scene.id!=='combat')setScene('combat');setTurn((S.turn+1)%ORDER.length);});
+$('#end').addEventListener('click',function(){setTurn(-1);});
+// Effets du MJ : les mêmes que ceux que The Screen ou la télécommande envoient à la table
+function mjFx(k){
+  var t=now();
+  if(k==='crit')S.fx.push({type:'crit',t:t,d:2.2});
+  else if(k==='dmg')S.fx.push({type:'dmg',t:t,col:[255,18,12],d:1.4});
+  else if(k==='bolt')S.fx.push({type:'storm',t:t,off:[0,0.45,0.9],sides:[0,1,2].map(function(){return Math.floor(Math.random()*4);}),hits:[Math.random(),Math.random(),Math.random()],d:2.3});
+  else if(k==='heal')S.fx.push({type:'wave',t:t,center:GM_CENTER,col:[90,235,150],speed:90,width:14,glow:0.3,ember:false,d:N/2/90+2.2});
+  redraw();
+}
+$$('[data-mjfx]').forEach(function(b){b.addEventListener('click',function(){mjFx(b.dataset.mjfx);});});
+$('#bright').addEventListener('input',function(e){S.bright=(+e.target.value)/100;$('#bright-out').textContent=e.target.value+' %';redraw();});
+
+/* ---------- appli joueur ---------- */
+var AC=null;
+function sfx(kind){
+  if(!S.sound)return;
+  try{if(!AC)AC=new (window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();}catch(e){return;}
+  var t=AC.currentTime,out=AC.createGain();out.gain.value=0.5;out.connect(AC.destination);
+  var tone=function(type,f0,f1,dur,vol,dl){var o=AC.createOscillator(),g=AC.createGain(),s=t+(dl||0);o.type=type;o.frequency.setValueAtTime(f0,s);if(f1)o.frequency.exponentialRampToValueAtTime(f1,s+dur);g.gain.setValueAtTime(0.0001,s);g.gain.exponentialRampToValueAtTime(vol,s+0.02);g.gain.exponentialRampToValueAtTime(0.0001,s+dur);o.connect(g);g.connect(out);o.start(s);o.stop(s+dur+0.05);};
+  var hiss=function(dur,f0,f1,q,vol,dl,type){var s=t+(dl||0),len=Math.floor(AC.sampleRate*dur),buf=AC.createBuffer(1,len,AC.sampleRate),dd=buf.getChannelData(0);for(var i=0;i<len;i++)dd[i]=Math.random()*2-1;var src=AC.createBufferSource();src.buffer=buf;var fl=AC.createBiquadFilter();fl.type=type||'bandpass';fl.Q.value=q||1;fl.frequency.setValueAtTime(f0,s);if(f1)fl.frequency.exponentialRampToValueAtTime(f1,s+dur);var g=AC.createGain();g.gain.setValueAtTime(0.0001,s);g.gain.exponentialRampToValueAtTime(vol,s+0.03);g.gain.exponentialRampToValueAtTime(0.0001,s+dur);src.connect(fl);fl.connect(g);g.connect(out);src.start(s);};
+  if(kind==='boom'){hiss(0.9,300,2000,0.8,0.5,0);hiss(1.4,180,60,0.7,0.9,0.75,'lowpass');tone('sine',90,40,1.2,0.7,0.75);}
+  else if(kind==='ice'){tone('sine',2200,600,0.7,0.22,0);hiss(0.9,6000,9000,4,0.25,0.05,'highpass');}
+  else if(kind==='chime'){tone('sine',880,0,1.2,0.3,0);tone('sine',1320,0,1.4,0.22,0.12);}
+  else if(kind==='zap'){tone('sawtooth',300,1200,0.35,0.12,0);tone('sine',1200,0,0.6,0.2,0.3);}
+  else if(kind==='slash'){hiss(0.25,1500,5000,1.2,0.5,0);}
+  else if(kind==='fanfare'){tone('triangle',523,0,0.35,0.3,0);tone('triangle',659,0,0.35,0.3,0.12);tone('triangle',784,0,0.8,0.32,0.24);hiss(1.2,7000,9000,2,0.12,0.24,'highpass');}
+  else if(kind==='whoosh'){hiss(1.4,200,1800,0.7,0.5,0);}
+  else if(kind==='thunder'){hiss(0.15,3000,3000,0.5,0.6,0,'highpass');hiss(2.2,120,50,0.6,0.9,0.1,'lowpass');}
+  else if(kind==='shield'){tone('sine',440,660,0.6,0.2,0);tone('sine',660,990,0.8,0.15,0.1);}
+}
+var toastT=0;
+function toast(msg){var el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastT);toastT=setTimeout(function(){el.classList.remove('show');},1400);}
+function cast(def,targetId){
+  var me=byChar[S.me],from=SLOTS[me.slot].center,t=now(),fx=def.fx;
+  var travel=function(to,tt,off,extra){var dir=fwd(from,to,1)<=N/2?1:-1,L=fwd(from,to,dir);var F={type:'travel',t:t+(off||0),from:from,to:to,dir:dir,L:L,tt:tt,col:fx.color,burst:fx.burst||fx.color,big:!!fx.big,pillar:!!fx.pillar,flood:fx.flood||0,flash:fx.flash||0,d:tt+1.8};S.fx.push(F);};
+  if(fx.type==='travel'){
+    var to=fx.ally?SLOTS[byChar[targetId].slot].center:GM_CENTER;
+    travel(to,fx.fast?0.45:(fx.big?1.0:(fx.ally?0.8:0.7)));
+  } else if(fx.type==='multi'){var n=fx.n||4;for(var k=0;k<n;k++)travel((GM_CENTER+Math.round((k-(n-1)/2)*5)+N)%N,0.55,k*0.13);}
+  else if(fx.type==='wave'){S.fx.push({type:'wave',t:t,center:from,col:fx.color,speed:fx.speed,width:fx.width,glow:fx.glow,ember:!!fx.ember,d:N/2/fx.speed+2.2});}
+  else if(fx.type==='shield'){S.fx.push({type:'shield',t:t,center:from,col:fx.color,d:2.2});}
+  else if(fx.type==='mark'){S.fx.push({type:'mark',t:t,center:GM_CENTER,col:fx.color,d:2.7});}
+  else if(fx.type==='shimmer'){S.fx.push({type:'shimmer',t:t,col:fx.color,seed:Math.random()*100,d:2.6});}
+  else if(fx.type==='allseats'){SLOTS.forEach(function(sl,ix){S.fx.push({type:'pillar',t:t+ix*0.12,center:sl.center,col:fx.color,d:2.3});});}
+  else if(fx.type==='storm'){S.fx.push({type:'storm',t:t,off:[0,0.45,0.9],sides:[0,1,2].map(function(){return Math.floor(Math.random()*4);}),hits:[Math.random(),Math.random(),Math.random()],d:2.3});}
+  else if(fx.type==='crit'){S.fx.push({type:'crit',t:t,d:2.2});}
+  S.plexi[S.me]={col:C(def.c),t:t};
+  sfx(def.snd);
+  toast(def.n+(targetId?' → '+byChar[targetId].name:''));
+  redraw();
+}
+var pending=null;
+function ask(def){
+  pending=def;$('#target-q').textContent=def.n+' : vers qui ?';
+  var tl=$('#target-list');tl.innerHTML='';
+  CHARS.forEach(function(c){if(c.id===S.me)return;var b=document.createElement('button');b.type='button';b.innerHTML='<i></i><span></span>';b.querySelector('i').style.background=c.color;b.querySelector('span').textContent=c.name;
+    b.addEventListener('click',function(){$('#target').hidden=true;cast(pending,c.id);pending=null;});tl.appendChild(b);});
+  $('#target').hidden=false;
+}
+$('#target-cancel').addEventListener('click',function(){$('#target').hidden=true;pending=null;});
+var useFx=function(def){if(def.target)ask(def);else{$('#target').hidden=true;cast(def);}};
+function buildBase(){var b=$('#base');b.innerHTML='';BASE.forEach(function(d){var x=document.createElement('button');x.type='button';x.className='fxb';x.innerHTML='<i></i><span><b></b><small></small></span>';x.querySelector('i').style.background=d.c;x.querySelector('b').textContent=d.n;x.querySelector('small').textContent=d.d;x.addEventListener('click',function(){useFx(d);});b.appendChild(x);});}
+function buildGrim(){var me=byChar[S.me],cls=CLASSES[me.cls],g=$('#grim');g.innerHTML='';$('#grim-h').textContent=cls.title;
+  cls.spells.forEach(function(sp){var b=document.createElement('button');b.type='button';b.className='spell';b.innerHTML='<i></i><span><strong></strong><small></small></span>';
+    b.querySelector('i').style.background='radial-gradient(circle at 35% 35%,#fff,'+sp.c+' 45%,#0F1419 100%)';b.querySelector('strong').textContent=sp.n;b.querySelector('small').textContent=sp.d;
+    b.addEventListener('click',function(){useFx(sp);});g.appendChild(b);});}
+function setMe(id){
+  S.me=id;var me=byChar[id];
+  root.style.setProperty('--hero',me.color);
+  $$('#names button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.id===id?'true':'false');});
+  $('#who').textContent=me.name;
+  $('#seat-info').textContent='Placé'+(me.cls==='rodeur'||me.cls==='magicien'?'e':'')+' par ton MJ '+SEAT_DESC[me.slot]+' · pouvoirs de '+me.label+'.';
+  $('#plexi').textContent=me.name;$('#shelf-name').textContent=me.name;
+  $('#target').hidden=true;pending=null;
+  buildGrim();setTurn(S.turn);
+}
+var names=$('#names');
+CHARS.forEach(function(c){var b=document.createElement('button');b.type='button';b.dataset.id=c.id;b.innerHTML='<i></i><span></span>';b.querySelector('i').style.background=c.color;b.querySelector('span').textContent=c.name;b.addEventListener('click',function(){setMe(c.id);});names.appendChild(b);});
+$('#snd').addEventListener('click',function(){S.sound=!S.sound;this.setAttribute('aria-checked',S.sound?'true':'false');if(S.sound)sfx('chime');});
+
+/* ---------- fenêtre flottante ---------- */
+var body=document.body,dock=$('#dock'),device=$('#device');
+function setMode(v){device.className='device '+v;root.style.setProperty('--dockw',v==='pc'?'600px':'340px');$$('#mode button').forEach(function(b){b.setAttribute('aria-pressed',b.dataset.v===v?'true':'false');});}
+function openApp(opts){
+  opts=opts||{};
+  dock.hidden=false;body.classList.add('app-open');
+  if(opts.tablets)setTablets(true);
+  if(opts.sound&&!S.sound)$('#snd').click();
+  setTimeout(function(){board.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});},60);
+}
+function closeApp(){dock.hidden=true;body.classList.remove('app-open');}
+function setTablets(on){S.tablets=on;$('#tablets-btn').setAttribute('aria-pressed',on?'true':'false');$('#tablets-btn').textContent=on?'Masquer les tablettes':'Afficher les tablettes';redraw();}
+$$('#mode button').forEach(function(b){b.addEventListener('click',function(){setMode(b.dataset.v);});});
+$('#open-app').addEventListener('click',function(){openApp();});
+$('#close-app').addEventListener('click',closeApp);
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!dock.hidden)closeApp();});
+$('#tablets-btn').addEventListener('click',function(){setTablets(!S.tablets);if(S.tablets)board.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});});
+
+/* ---------- cagnotte ---------- */
+var TIERS=[
+ {n:0,a:'0 €',t:'Déjà prévu',cond:'Inclus dans la table',p:'La table elle-même. Ton MJ y affiche ses cartes avec un brouillard de guerre, des informations et des images, et peut y diffuser de la musique. Les lumières s’adaptent à l’ambiance, et l’appli du MJ lui permet de les piloter et de désigner le joueur dont c’est le tour en combat.',see:'table'},
+ {n:1,a:'10 €',t:'L’appli joueurs',cond:'Dès 2 participations, l’appli est ouverte à tout le monde',p:'Tu te connectes à la table depuis ton téléphone ou ton ordinateur, et tu as accès aux quatre effets de base : réussite critique, soin, sort, attaque.',see:'app'},
+ {n:2,a:'25 €',t:'Ta tablette et ton grimoire',cond:'Dès 2 participations, deux tablettes non personnalisées sont aussi fabriquées',p:'Ta tablette personnalisée, gravée à ton nom, se clipse sur la table face à toi, avec un emplacement pour ta figurine. Et dans l’appli, un grimoire de six effets uniques, propres aux pouvoirs de ton personnage.',see:'tablets'},
+ {n:3,a:'35 €',t:'Les sons et effets visuels de tes pouvoirs',cond:'Débloqué dès 2 participations',p:'Personnalise les sons et les effets visuels que tes pouvoirs déclenchent sur la table. Par exemple : la boule de feu gronde, le soin tinte, la foudre claque.',see:'sound'},
+ {n:4,a:'45 €',t:'L’afficheur et les cartes dynamiques',cond:'Débloqué dès 4 participations',p:'Un afficheur supplémentaire au-dessus du bord côté MJ, tourné vers les joueurs : ordre du tour en combat, état de santé des personnages, informations utiles. Et des cartes dynamiques : des cartes animées, avec des effets visuels réalistes.',disp:true}
+];
+var ladder=$('#ladder');
+TIERS.forEach(function(T){var li=document.createElement('li');li.className='rung';
+  li.innerHTML='<span class="n"></span><div><h3></h3><p></p></div><div class="side"><span class="amount"></span><span class="cond"></span></div>';
+  li.querySelector('.n').textContent=T.n;li.querySelector('h3').textContent=T.t;li.querySelector('p').textContent=T.p;li.querySelector('.amount').textContent=T.a;li.querySelector('.cond').textContent=T.cond;
+  if(T.disp){var d=document.createElement('div');d.className='disp';d.setAttribute('aria-label','Exemple d’affichage pour les joueurs');
+    d.innerHTML='<div class="ord">Round 2 · <b>Elra</b> › <b class="now">Gobelins</b> › <b>Brom</b> › <b>Kaël</b> › <b>Sialé</b> › <b>Tobias</b></div><div class="hp"><span>Elra<i style="--v:80%"></i></span><span>Brom<i style="--v:45%"></i></span><span>Kaël<i style="--v:100%"></i></span><span>Sialé<i style="--v:62%"></i></span><span>Tobias<i style="--v:90%"></i></span></div>';
+    li.querySelector('div').appendChild(d);}
+  if(T.see){var b=document.createElement('button');b.type='button';b.className='see';b.textContent='Voir dans la démo →';
+    b.addEventListener('click',function(){
+      if(T.see==='table'){board.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});setScene('combat');setTurn(0);}
+      else if(T.see==='app')openApp();
+      else if(T.see==='tablets')openApp({tablets:true});
+      else if(T.see==='sound')openApp({sound:true});
+    });li.querySelector('.side').appendChild(b);}
+  ladder.appendChild(li);});
+$('#go-table').addEventListener('click',function(){$('#table').scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});});
+
+/* ---------- démarrage ---------- */
+buildBase();setMode('phone');setMe('siale');setScene('donjon');
+layout();kick();
+if(window.ResizeObserver){new ResizeObserver(function(){var w=board.clientWidth;if(Math.abs(w-W)>1){layout();redraw();}}).observe(board);}
+else window.addEventListener('resize',function(){layout();redraw();});
+if(window.IntersectionObserver){new IntersectionObserver(function(es){visible=es[0].isIntersecting;kick();}).observe(board);}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(redraw);
+})();
+</script>

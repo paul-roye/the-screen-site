@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administration du site</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="icone.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=Cinzel:wght@500;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<!-- Page de l'auteur du site : relire les idées, lire les bugs, les promesses et les abonnés.
+     Tout passe par /api/admin, avec le jeton JETON_ADMIN, gardé le temps de l'onglet. -->
+<main class="dedans admin">
+  <header>
+    <p class="sur"><a href="index.html">Retour au site</a></p>
+    <h1>Administration</h1>
+  </header>
+
+  <form class="formulaire" id="f-jeton">
+    <div class="champ"><label for="jeton">Jeton d’administration</label><input id="jeton" type="password" autocomplete="off" required></div>
+    <p class="message" id="etat" role="status" hidden></p>
+    <div class="actions">
+      <button class="btn btn--fort" type="submit">Charger</button>
+      <button class="btn" type="button" id="oublier">Oublier le jeton</button>
+    </div>
+  </form>
+
+  <section id="s-idees" hidden>
+    <h2 class="sous-titre">Idées</h2>
+    <div class="defile"><table><thead><tr><th>Reçue</th><th>Outil</th><th>Idée</th><th>De</th><th>Voix</th><th>Statut</th><th></th></tr></thead><tbody></tbody></table></div>
+  </section>
+  <section id="s-bugs" hidden>
+    <h2 class="sous-titre">Bugs</h2>
+    <div class="defile"><table><thead><tr><th>Reçu</th><th>Outil</th><th>Version</th><th>Ce qui s’est passé</th><th>Attendu</th><th>De</th><th>Statut</th><th></th></tr></thead><tbody></tbody></table></div>
+  </section>
+  <section id="s-promesses" hidden>
+    <h2 class="sous-titre">Promesses de la cagnotte</h2>
+    <div class="defile"><table><thead><tr><th>Reçue</th><th>Prénom</th><th>Palier</th><th>Mot</th><th></th></tr></thead><tbody></tbody></table></div>
+  </section>
+  <section id="s-abonnes" hidden>
+    <h2 class="sous-titre">Abonnés aux nouvelles</h2>
+    <div class="defile"><table><thead><tr><th>Depuis</th><th>Courriel</th><th>Sujets</th><th></th></tr></thead><tbody></tbody></table></div>
+  </section>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var etat = $('#etat'), champ = $('#jeton');
+  var dire = function (texte, genre) { etat.textContent = texte; etat.dataset.etat = genre; etat.hidden = false; };
+  try { champ.value = sessionStorage.getItem('jeton-admin') || ''; } catch (e) {}
+
+  function appeler(methode, corps) {
+    return fetch('/api/admin', {
+      method: methode,
+      headers: { authorization: 'Bearer ' + champ.value.trim(), 'content-type': 'application/json' },
+      body: corps ? JSON.stringify(corps) : undefined
+    }).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) {
+        if (!r.ok) throw new Error(d.erreur || 'Erreur ' + r.status);
+        return d;
+      });
+    });
+  }
+
+  // Une ligne de tableau : des cellules de texte, puis les boutons d'action.
+  function ligne(cellules, table, id, actions) {
+    var tr = document.createElement('tr');
+    cellules.forEach(function (c) { var td = document.createElement('td'); td.textContent = c === null || c === undefined ? '' : String(c); tr.appendChild(td); });
+    var td = document.createElement('td'); td.className = 'actes';
+    actions.forEach(function (a) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'mini'; b.textContent = a[1];
+      b.addEventListener('click', function () {
+        // Supprimer se confirme d'un second clic sur le même bouton.
+        if (a[0] === 'supprimer' && b.dataset.sur !== '1') { b.dataset.sur = '1'; b.textContent = 'Confirmer ?'; return; }
+        b.disabled = true;
+        appeler('POST', { table: table, id: id, action: a[0] }).then(charger).catch(function (e) { dire(e.message, 'erreur'); b.disabled = false; });
+      });
+      td.appendChild(b); td.appendChild(document.createTextNode(' '));
+    });
+    tr.appendChild(td);
+    return tr;
+  }
+  function remplir(section, lignes) {
+    var corps = $('tbody', section);
+    corps.textContent = '';
+    lignes.forEach(function (l) { corps.appendChild(l); });
+    section.hidden = false;
+  }
+
+  function charger() {
+    return appeler('GET').then(function (d) {
+      try { sessionStorage.setItem('jeton-admin', champ.value.trim()); } catch (e) {}
+      dire(d.idees.filter(function (i) { return i.statut === 'attente'; }).length + ' idée(s) à relire, ' +
+        d.bugs.filter(function (b) { return b.statut === 'nouveau'; }).length + ' bug(s) nouveau(x), ' +
+        d.promesses.length + ' promesse(s), ' + d.abonnes.length + ' abonné(s).', 'ok');
+      remplir($('#s-idees'), d.idees.map(function (i) {
+        return ligne([i.cree, i.outil, i.titre + (i.texte ? ' — ' + i.texte : ''), i.auteur, i.voix, i.statut], 'idees', i.id,
+          [['publier', 'Publier'], ['refuser', 'Refuser'], ['supprimer', 'Supprimer']]);
+      }));
+      remplir($('#s-bugs'), d.bugs.map(function (b) {
+        return ligne([b.cree, b.outil, b.version, b.texte, b.attendu, b.auteur, b.statut], 'bugs', b.id,
+          [b.statut === 'traite' ? ['rouvrir', 'Rouvrir'] : ['traiter', 'Marquer traité'], ['supprimer', 'Supprimer']]);
+      }));
+      remplir($('#s-promesses'), d.promesses.map(function (p) {
+        return ligne([p.cree, p.prenom, p.palier, p.mot], 'promesses', p.id, [['supprimer', 'Supprimer']]);
+      }));
+      remplir($('#s-abonnes'), d.abonnes.map(function (a) {
+        return ligne([a.cree, a.courriel, a.sujets], 'abonnes', a.courriel, [['supprimer', 'Supprimer']]);
+      }));
+    }).catch(function (e) { dire(e.message, 'erreur'); });
+  }
+
+  $('#f-jeton').addEventListener('submit', function (e) { e.preventDefault(); charger(); });
+  $('#oublier').addEventListener('click', function () {
+    champ.value = '';
+    try { sessionStorage.removeItem('jeton-admin'); } catch (e) {}
+    ['#s-idees', '#s-bugs', '#s-promesses', '#s-abonnes'].forEach(function (s) { $(s).hidden = true; });
+    etat.hidden = true;
+  });
+  if (champ.value) charger();
+})();
+</script>
+</body>
+</html>

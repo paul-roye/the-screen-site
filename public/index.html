@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Screen, The Seat, The Table · outils pour D&amp;D 5.5 et D&amp;D Beyond</title>
+<meta name="description" content="Trois outils pour jouer à D&amp;D 5.5 avec D&amp;D Beyond : The Screen, le gestionnaire de campagne du MJ ; The Seat, des extensions Chrome pour la feuille des joueurs ; The Table, une table de jeu avec écran à plat et ruban de lumière.">
+<link rel="icon" href="icone.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=Barlow+Semi+Condensed:wght@400;500;700&family=Cinzel:wght@500;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Grenze+Gotisch:wght@500;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap">
+<link rel="stylesheet" href="site.css">
+<script>try { if (localStorage.getItem('ambiance') === 'strahd') document.documentElement.dataset.ambiance = 'strahd'; } catch (e) {}</script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="hx" viewBox="0 0 128 128"><path d="M64 14 107 39v50L64 114 21 89V39z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round"/></symbol>
+    <symbol id="hx-fin" viewBox="-22 -22 44 44"><path d="M0-18 15.6-9V9L0 18-15.6 9V-9z" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="barre">
+  <div class="dedans">
+    <a class="marque" href="#haut">
+      <svg class="blason" viewBox="0 0 128 128" aria-hidden="true"><use href="#hx"/><path class="gl" d="M36 82V50l17-8h22l17 8v32"/></svg>
+      The Screen
+    </a>
+    <nav aria-label="Sections">
+      <a href="#mj">Le MJ</a>
+      <a href="#joueurs">Les joueurs</a>
+      <a href="#table">La table</a>
+      <a href="#avous">Idées et bugs</a>
+    </nav>
+    <div class="theme">
+      <span class="sur" id="theme-l">Thème de la page</span>
+      <div class="choix" id="ambiances" role="group" aria-labelledby="theme-l">
+        <button type="button" data-ambiance="aeldran" aria-pressed="true" title="Chroniques d’Aëldran : médiéval, or et azur" style="--c-theme: var(--pastille-aeldran)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg><span>Aëldran</span></button>
+        <button type="button" data-ambiance="strahd" aria-pressed="false" title="Malédiction de Strahd : gothique, néon" style="--c-theme: var(--pastille-strahd)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><span>Strahd</span></button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="haut">
+  <section class="ouverture">
+    <div class="dedans haut">
+      <div class="texte">
+        <p class="sur">Trois outils pour jouer à D&amp;D 5.5 avec D&amp;D Beyond</p>
+        <h1><span class="t-screen">Derrière l’écran</span>, <span class="t-seat">à votre place</span>, <span class="t-table">sur la table</span>.</h1>
+        <p class="lede"><b class="t-screen">The Screen</b> est le gestionnaire de campagne du MJ, sur son PC. <b class="t-seat">The Seat</b> est une série d’extensions Chrome qui ajoutent à la feuille D&amp;D Beyond de chaque joueur différents add-ons : l’état du groupe, les formes sauvages du druide et une aide de jeu si vous avez un familier ou un compagnon. <b class="t-table">The Table</b> propose une projection dynamique d’informations, d’images et de cartes, dans une table entourée de lumière.</p>
+      </div>
+
+      <figure class="plan" id="plan">
+        <svg viewBox="0 0 560 384" role="img" aria-label="La table vue de dessus : le MJ derrière son écran, la carte au centre, quatre joueurs autour">
+          <defs>
+            <pattern id="cases" x="112" y="104" width="9.08" height="9.05" patternUnits="userSpaceOnUse"><path d="M9.08 0H0V9.05" fill="none" stroke="var(--plateau-trait)" stroke-width=".6"/></pattern>
+          </defs>
+          <path class="mj" d="M280 2 295.6 11V29L280 38 264.4 29V11z"/>
+          <path class="ecran" d="M150 70 196 50H364L410 70"/>
+          <rect class="caisse" x="96" y="88" width="368" height="222" rx="5"/>
+          <rect class="dalle" x="112" y="104" width="336" height="190"/>
+          <path class="salle" d="M150 142h72v36h54v-54h90v81h-45v54H213v-45h-63z"/>
+          <rect class="cases" x="112" y="104" width="336" height="190"/>
+          <circle class="heros" cx="240" cy="196" r="4"/><circle class="heros" cx="252" cy="205" r="4"/><circle class="heros" cx="231" cy="208" r="4"/><circle class="heros" cx="246" cy="218" r="4"/>
+          <circle class="monstre" cx="330" cy="152" r="4"/><circle class="monstre" cx="345" cy="164" r="4"/><circle class="monstre" cx="318" cy="170" r="4"/>
+          <rect class="ruban" x="104" y="96" width="352" height="206" rx="3"/>
+          <path class="tour" data-i="0" d="M104 162v74"/>
+          <path class="tour" data-i="1" d="M160 302h80"/>
+          <path class="tour" data-i="2" d="M320 302h80"/>
+          <path class="tour" data-i="3" d="M456 162v74"/>
+          <g class="place" data-i="0"><rect x="74" y="187" width="8" height="24"/><path d="M48 181 63.6 190v18L48 217 32.4 208v-18z"/></g>
+          <g class="place" data-i="1"><rect x="188" y="316" width="24" height="8"/><path d="M200 330 215.6 339v18L200 366 184.4 357v-18z"/></g>
+          <g class="place" data-i="2"><rect x="348" y="316" width="24" height="8"/><path d="M360 330 375.6 339v18L360 366 344.4 357v-18z"/></g>
+          <g class="place" data-i="3"><rect x="478" y="187" width="8" height="24"/><path d="M512 181 527.6 190v18L512 217 496.4 208v-18z"/></g>
+        </svg>
+        <div class="commandes" aria-label="Essayer The Table">
+          <button class="puce" type="button" data-scene="taverne" aria-pressed="true">Taverne</button>
+          <button class="puce" type="button" data-scene="foret" aria-pressed="false">Forêt</button>
+          <button class="puce" type="button" data-scene="donjon" aria-pressed="false">Donjon</button>
+          <button class="puce" type="button" data-scene="orage" aria-pressed="false">Orage</button>
+          <button class="puce puce--tour" type="button" id="tour">Tour suivant</button>
+        </div>
+        <p class="legende-tour" id="legende-tour" aria-live="polite">La table vue de dessus. Changez l’ambiance du ruban, puis passez le tour.</p>
+      </figure>
+    </div>
+
+    <div class="dedans">
+      <div class="cotes">
+        <a href="#mj" style="--c: var(--c-screen)">
+          <svg class="blason" viewBox="0 0 128 128" aria-hidden="true"><use href="#hx"/><path class="gl" d="M36 82V50l17-8h22l17 8v32"/></svg>
+          <div><h3>The Screen</h3><span class="petit">Pour le MJ : le gestionnaire de campagne</span></div>
+        </a>
+        <a href="#joueurs" style="--c: var(--c-seat)">
+          <svg class="blason" viewBox="0 0 128 128" aria-hidden="true"><use href="#hx"/><circle class="g" cx="64" cy="47" r="11"/><circle class="g" cx="46" cy="78" r="11"/><circle class="g" cx="82" cy="78" r="11"/></svg>
+          <div><h3>The Seat</h3><span class="petit">Pour les joueurs : les extensions de la feuille</span></div>
+        </a>
+        <a href="#table" style="--c: var(--c-table)">
+          <svg class="blason" viewBox="0 0 128 128" aria-hidden="true"><use href="#hx"/><rect class="gl" x="38" y="47" width="52" height="34" rx="3"/></svg>
+          <div><h3>The Table</h3><span class="petit">Pour tous : la table, sa cagnotte, son journal</span></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE SCREEN -->
+  <section class="bande bande--creuse" id="mj" style="--c: var(--c-screen)">
+    <div class="dedans">
+      <header class="tete">
+        <svg class="blason" viewBox="0 0 128 128" aria-hidden="true"><use href="#hx"/><path class="gl" d="M36 82V50l17-8h22l17 8v32"/></svg>
+        <p class="sur">Pour le MJ</p>
+        <h2>The Screen</h2>
+        <p class="chapo">Une page locale sur le PC du MJ, que les joueurs ne voient pas. Elle met en jeu les données de la campagne, note ce qui se passe à la table et prépare le résumé de la séance.</p>
+      </header>
+
+      <div class="deux">
+        <ul class="atouts">
+          <li><strong>Toutes vos campagnes</strong><span>Chacune dans son dossier, avec sa charte graphique, son calendrier, sa météo et sa musique.</span></li>
+          <li><strong>Plus de vingt outils</strong><span>Personnages, Combat, Horloge, Déroulé, PNJ, Trajets, Dés en 3D… à disposer en quatre modes.</span></li>
+          <li><strong>Branché sur D&amp;D Beyond</strong><span>Les fiches des héros relevées en continu ; états, inspiration, PV et objets écrits en retour.</span></li>
+          <li><strong>Combats sur table</strong><span>Préparation avec sa difficulté, initiative, tours, PV, fiches de monstres aux jets d’un clic.</span></li>
+          <li><strong>Écran des joueurs</strong><span>La carte sur un second écran : brouillard de guerre, jetons, mesures, zones d’effet.</span></li>
+          <li><strong>Fin de session</strong><span>Un résumé pour votre agent IA de campagne, et sa réponse appliquée après votre validation.</span></li>
+        </ul>
+
+        <figure class="schema">
+          <div class="modes" id="modes">
+            <button type="button" data-mode="exploration" aria-pressed="true">Exploration</button>
+            <button type="button" data-mode="ville" aria-pressed="false">Ville</button>
+            <button type="button" data-mode="voyage" aria-pressed="false">Voyage</button>
+            <button type="button" data-mode="rencontre" aria-pressed="false">Rencontre</button>
+          </div>
+          <div class="grille" id="grille"></div>
+          <figcaption>Schéma du tableau de bord : un mode, une disposition. Les captures d’écran viendront ici.</figcaption>
+        </figure>
+      </div>
+
+      <div class="version">
+        <div class="sceau"><b data-version="the-screen">1.2.0</b><span>scellée le<br><span data-date="the-screen">8 nov. 2026</span></span></div>
+        <div class="corps">
+          <h3>Nouveautés : <span data-nouveautes="the-screen">l’écran des joueurs, les plugins et une table mieux tenue</span></h3>
+          <p class="petit">Windows et Chrome. Rien à installer : un dossier à décompresser, un fichier à lancer. L’extension du MJ, The Screen · Scribe <span data-version="scribe">1.18.0</span>, est dans le zip.</p>
+          <div class="actions">
+            <a class="btn btn--fort" data-telecharge="the-screen" href="#mj">Télécharger le zip</a>
+            <a class="btn" data-versions href="#mj">Versions précédentes</a>
+          </div>
+          <details>
+            <summary>Ce qui change dans la <span data-version="the-screen">1.2.0</span></summary>
+            <ul data-points="the-screen">
+              <li>Écran des joueurs sur un second écran ou une TV posée à plat, avec un seul bouton Diffuser.</li>
+              <li>Plugins activés campagne par campagne, dont The Table pour le ruban LED.</li>
+              <li>Fin de combat : PNJ tombés à marquer morts, jalon à démarrer ou à terminer.</li>
+              <li>Avant de terminer un jalon ou une étape : ce qui reste à jouer, à régler sans quitter la page.</li>
+              <li>Combat au clavier, trajets sans rencontres aléatoires, fenêtres qui se réduisent sur place.</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THE SEAT -->
+  <section class="bande" id="joueurs" style="--c: var(--c-seat)">
+    <div class="dedans">
+      <header class="tete">
+        <svg class="blason" viewBox="0 0 128 128" aria-hidden="true"><use href="#hx"/><circle class="g" cx="64" cy="47" r="11"/><circle class="g" cx="46" cy="78" r="11"/><circle class="g" cx="82" cy="78" r="11"/></svg>
+        <p class="sur">Pour les joueurs</p>
+        <h2>The Seat</h2>
+        <p class="chapo">Une série d’extensions Chrome qui ajoutent à votre feuille D&amp;D Beyond différents add-ons : l’état du groupe, les formes sauvages du druide, une aide de jeu si vous avez un familier ou un compagnon. Chacune s’installe seule, et marche même si votre MJ n’utilise pas The Screen.</p>
+      </header>
+
+      <div class="extensions">
+        <article class="ext">
+          <svg class="blason" viewBox="0 0 128 128" aria-hidden="true"><use href="#hx"/><circle class="g" cx="64" cy="47" r="11"/><circle class="g" cx="46" cy="78" r="11"/><circle class="g" cx="82" cy="78" r="11"/></svg>
+          <h3>The Seat · Party</h3>
+          <p class="petit">Le bandeau du groupe</p>
+          <p class="desc">En bas ou à gauche de votre feuille : les héros de votre campagne, leur santé, leurs états, leur équipement porté et l’inventaire commun.</p>
+          <div class="pied"><span class="petit">v<span data-version="party">1.2.0</span> · Chrome</span>
+            <button class="btn" type="button" data-image="captures/party.png" data-capture="The Seat · Party" data-vue="Le bandeau du groupe en bas d’une feuille de personnage D&amp;D Beyond, puis à gauche.">Voir une capture</button>
+            <a class="btn btn--fort" data-telecharge="party" href="#joueurs">Télécharger</a></div>
+        </article>
+        <article class="ext">
+          <svg class="blason" viewBox="0 0 128 128" aria-hidden="true"><use href="#hx"/><path class="g" d="M78 38a28 28 0 1 0 14 40 22 22 0 0 1-14-40z"/></svg>
+          <h3>The Seat · Wild Shape</h3>
+          <p class="petit">L’aide du druide</p>
+          <p class="desc">Un volet à côté de votre feuille : vos formes sauvages, la transformation en un clic, et votre fiche tenue à jour tant que vous êtes transformé.</p>
+          <div class="pied"><span class="petit">v<span data-version="wild-shape">1.2.2</span> · Chrome</span>
+            <button class="btn" type="button" data-image="captures/wild-shape.png" data-capture="The Seat · Wild Shape" data-vue="Le volet des formes sauvages à droite de la feuille, un druide transformé.">Voir une capture</button>
+            <a class="btn btn--fort" data-telecharge="wild-shape" href="#joueurs">Télécharger</a></div>
+        </article>
+        <article class="ext">
+          <svg class="blason" viewBox="0 0 128 128" aria-hidden="true"><use href="#hx"/><ellipse class="g" cx="64" cy="78" rx="16" ry="13"/><circle class="g" cx="43" cy="60" r="7"/><circle class="g" cx="57" cy="47" r="7"/><circle class="g" cx="71" cy="47" r="7"/><circle class="g" cx="85" cy="60" r="7"/></svg>
+          <h3>The Seat · Companion</h3>
+          <p class="petit">La fiche du compagnon</p>
+          <p class="desc">La fiche de votre familier ou compagnon comme un bloc de monstre, avec ses jets en dés 3D, ses PV et les états que le MJ lui a posés.</p>
+          <div class="pied"><span class="petit">v<span data-version="companion">1.8.2</span> · Chrome</span>
+            <button class="btn" type="button" data-image="captures/companion.png" data-capture="The Seat · Companion" data-vue="La fiche du compagnon dans sa fenêtre, avec un jet de dés en cours.">Voir une capture</button>
+            <a class="btn btn--fort" data-telecharge="companion" href="#joueurs">Télécharger</a></div>
+        </article>
+        <article class="ext ext--avenir">
+          <svg class="blason" viewBox="0 0 128 128" aria-hidden="true"><use href="#hx"/><path class="g" d="M64 36l7 21 21 7-21 7-7 21-7-21-21-7 21-7z"/></svg>
+          <h3>The Seat · Spark</h3>
+          <p class="petit">L’appli des joueurs pour The Table</p>
+          <p class="desc">Depuis votre téléphone ou votre ordinateur, déclenchez sur The Table les effets de vos pouvoirs : critique, soin, sort, attaque, puis des sons et des effets visuels propres à votre personnage.</p>
+          <div class="pied"><span class="petit">À venir · palier 1 de la cagnotte</span><a class="btn" href="the-table.html">Essayer la démo</a></div>
+        </article>
+      </div>
+
+      <ol class="pose">
+        <li>Décompressez le zip dans un dossier que vous garderez.</li>
+        <li>Dans Chrome, ouvrez <code>chrome://extensions</code> et activez le « Mode développeur ».</li>
+        <li>Cliquez « Charger l’extension non empaquetée » et choisissez ce dossier.</li>
+      </ol>
+      <p class="petit pose-fin">Pour savoir quand une extension change de version : <a href="#f-lettre">les nouvelles par courriel</a>.</p>
+    </div>
+  </section>
+
+  <!-- THE TABLE -->
+  <section class="bande bande--creuse" id="table" style="--c: var(--c-table)">
+    <div class="dedans">
+      <header class="tete">
+        <svg class="blason" viewBox="0 0 128 128" aria-hidden="true"><use href="#hx"/><rect class="gl" x="38" y="47" width="52" height="34" rx="3"/></svg>
+        <p class="sur">Pour tous</p>
+        <h2>The Table</h2>
+        <p class="chapo">Une table de jeu avec un écran de 43 pouces posé à plat sous les figurines, et un ruban de lumière qui en fait le tour. Elle est en cours de fabrication : il n’y a encore rien à télécharger.</p>
+      </header>
+
+      <div class="deux">
+        <div class="pile">
+          <ul class="atouts atouts--colonne">
+            <li><strong>Projection dynamique</strong><span>Les cartes avec leur brouillard de guerre, les images et les informations de la partie, affichées à plat sous les figurines.</span></li>
+            <li><strong>Lumière pilotable par le MJ et les joueurs</strong><span>Le MJ change d’ambiance d’un geste : taverne, forêt, donjon, orage. Les joueurs y déclenchent les effets de leurs pouvoirs.</span></li>
+            <li><strong>Le tour de chacun</strong><span>En combat, la portion du cadre devant le joueur actif s’allume. Au tour des monstres, tout le cadre vire au rouge.</span></li>
+          </ul>
+          <dl class="fiche">
+            <dt>Écran</dt><dd>43 pouces, posé à plat</dd>
+            <dt>Grille</dt><dd>37 × 21 cases de 1 pouce</dd>
+            <dt>Lumière</dt><dd>Pilotable par le MJ et les joueurs</dd>
+            <dt>État</dt><dd>En cours de fabrication</dd>
+          </dl>
+        </div>
+
+        <div class="demos">
+          <div class="demo">
+            <h3>La démo : côté MJ et côté joueurs</h3>
+            <p>La table simulée avec son ruban. Côté MJ : les ambiances, le tour de jeu, les effets, pilotés depuis The Screen ou depuis une télécommande sur le téléphone. Côté joueurs : l’appli sur téléphone ou ordinateur, où l’on choisit un personnage et lance ses pouvoirs.</p>
+            <a class="btn btn--fort" href="the-table.html">Ouvrir la démo</a>
+          </div>
+          <div class="demo">
+            <h3>La cagnotte entre joueurs</h3>
+            <p>La page pour les joueurs de la table : ce que chaque palier débloque, comment ça se passe, et où inscrire sa promesse.</p>
+            <a class="btn" href="cagnotte.html">Ouvrir la page cagnotte</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="bloc" id="cagnotte">
+        <h3 class="sous-titre">La cagnotte entre joueurs</h3>
+        <p class="intro">La table de base, le MJ s’en occupe. Pour aller plus loin, une cagnotte entre joueurs, palier par palier. Les montants sont provisoires.</p>
+        <div class="deux">
+          <ol class="paliers">
+            <li class="palier">
+              <span class="rang"><svg viewBox="-22 -22 44 44" aria-hidden="true"><use href="#hx-fin" x="-22" y="-22" width="44" height="44"/></svg><b>0</b></span>
+              <h3>La table elle-même</h3><span class="somme">0 €</span>
+              <p>Projection des cartes, des images et des informations ; lumières d’ambiance ; tour de jeu en combat.</p>
+              <span class="cond">Déjà prévu : le MJ s’en occupe.</span>
+            </li>
+            <li class="palier">
+              <span class="rang"><svg viewBox="-22 -22 44 44" aria-hidden="true"><use href="#hx-fin" x="-22" y="-22" width="44" height="44"/></svg><b>1</b></span>
+              <h3>L’appli joueurs</h3><span class="somme">10 €</span>
+              <p>Vous rejoignez la table depuis votre téléphone ou votre ordinateur, avec quatre effets de base : critique, soin, sort, attaque.</p>
+              <span class="cond"><span class="losanges" aria-hidden="true"><i></i><i></i></span><span data-compte="2">0 participation sur 2.</span> Ensuite, l’appli est ouverte à tous.</span>
+            </li>
+            <li class="palier">
+              <span class="rang"><svg viewBox="-22 -22 44 44" aria-hidden="true"><use href="#hx-fin" x="-22" y="-22" width="44" height="44"/></svg><b>2</b></span>
+              <h3>Votre tablette et votre grimoire</h3><span class="somme">25 €</span>
+              <p>Une tablette gravée à votre nom, clipsée face à vous, et six effets propres à votre personnage.</p>
+              <span class="cond"><span class="losanges" aria-hidden="true"><i></i><i></i></span><span data-compte="2">0 participation sur 2.</span></span>
+            </li>
+            <li class="palier">
+              <span class="rang"><svg viewBox="-22 -22 44 44" aria-hidden="true"><use href="#hx-fin" x="-22" y="-22" width="44" height="44"/></svg><b>3</b></span>
+              <h3>Les sons et effets visuels de vos pouvoirs</h3><span class="somme">35 €</span>
+              <p>Personnalisez les sons et les effets visuels que vos pouvoirs déclenchent sur The Table.</p>
+              <span class="cond"><span class="losanges" aria-hidden="true"><i></i><i></i></span><span data-compte="2">0 participation sur 2.</span></span>
+            </li>
+            <li class="palier">
+              <span class="rang"><svg viewBox="-22 -22 44 44" aria-hidden="true"><use href="#hx-fin" x="-22" y="-22" width="44" height="44"/></svg><b>4</b></span>
+              <h3>L’afficheur et les cartes dynamiques</h3><span class="somme">45 €</span>
+              <p>Un afficheur tourné vers les joueurs (ordre du tour, santé des héros), et des cartes animées, avec des effets visuels réalistes.</p>
+              <span class="cond"><span class="losanges" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span data-compte="4">0 participation sur 4.</span></span>
+            </li>
+          </ol>
+
+          <div class="formulaire">
+            <h3>Vous jouez à cette table ?</h3>
+            <p class="petit">La page cagnotte détaille chaque palier et recueille les promesses des joueurs. Une promesse n’est pas un paiement : rien n’est encaissé sur le site.</p>
+            <div class="actions">
+              <a class="btn btn--fort" href="cagnotte.html">Ouvrir la page cagnotte</a>
+              <a class="btn" href="the-table.html">Essayer la démo</a>
+            </div>
+          </div>
+        </div>
+        <ul class="atouts atouts--trois">
+          <li><strong>La table d’abord</strong><span>Le MJ finance la table de base. Elle fonctionne dès le premier soir, cagnotte ou pas.</span></li>
+          <li><strong>Des paliers à débloquer</strong><span>Chaque palier se débloque quand assez de joueurs y participent.</span></li>
+          <li><strong>Pas de pression</strong><span>Vous participez si vous en avez envie. Tout le monde joue sur la même table.</span></li>
+        </ul>
+      </div>
+
+      <div class="bloc" id="journal">
+        <h3 class="sous-titre">Le journal de fabrication</h3>
+        <p class="intro">Où en est la table, en photos.</p>
+        <div class="journal" id="journal-liste">
+          <article class="nouvelle">
+            <time datetime="2026-11-08">8 novembre 2026</time>
+            <h3>The Screen sait piloter The Table</h3>
+            <p>La version 1.2.0 de The Screen apporte le plugin The Table : pendant un combat, le ruban suit le tour de chaque joueur et marque les dégâts, les critiques et les soins. Il a été essayé sur un boîtier simulé, en attendant le vrai.</p>          </article>
+          <article class="nouvelle">
+            <time datetime="2026-11-02">2 novembre 2026</time>
+            <h3>Le matériel est arrivé</h3>
+            <p>L’écran de 43 pouces, le ruban de lumière et la ventilation sont là. Le montage se fait en deux temps : la ventilation d’abord, puis le ruban.</p>          </article>
+        </div>
+        <div class="actions"><a class="btn" href="#f-lettre">Recevoir les nouvelles par courriel</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- À VOUS : idées, bugs, nouvelles -->
+  <section class="bande" id="avous">
+    <div class="dedans">
+      <header class="tete">
+        <svg class="blason" viewBox="0 0 128 128" aria-hidden="true" style="--c: var(--ultra)"><use href="#hx"/><path class="gl" d="M44 50h40M44 64h40M44 78h24"/></svg>
+        <p class="sur">À vous</p>
+        <h2>Idées, bugs et nouvelles</h2>
+        <p class="chapo">Proposez une idée, signalez un bug ou recevez les nouvelles par courriel. Aucun compte à créer.</p>
+      </header>
+
+      <div class="deux">
+        <div class="pile">
+          <div>
+            <h3 class="titre-liste">La boîte à idées</h3>
+            <ul class="idees" id="idees"></ul>
+            <p class="petit" id="idees-etat" style="margin-top: .75rem">Une idée proposée paraît ici après relecture.</p>
+          </div>
+          <div>
+            <h3 class="titre-liste">Bugs déjà connus</h3>
+            <ul class="connus">
+              <li><b>Icône d’Entravé.</b> L’état s’est affiché par son abréviation au lieu de son icône. Pas reproduit depuis.</li>
+              <li><b>Musique et changement de fenêtre.</b> YouTube met parfois la musique en pause ; The Screen la relance d’office.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="pile">
+          <form class="formulaire" id="f-retour">
+            <div class="bascule" id="bascule">
+              <button type="button" data-genre="idee" aria-pressed="true">Proposer une idée</button>
+              <button type="button" data-genre="bug" aria-pressed="false">Signaler un bug</button>
+            </div>
+            <div class="rangee">
+              <div class="champ"><label for="r-outil">Outil</label>
+                <select id="r-outil">
+                  <option value="the-screen">The Screen</option>
+                  <option value="scribe">The Screen · Scribe</option>
+                  <option value="party">The Seat · Party</option>
+                  <option value="wild-shape">The Seat · Wild Shape</option>
+                  <option value="companion">The Seat · Companion</option>
+                  <option value="the-table">The Table</option>
+                </select>
+              </div>
+              <div class="champ" data-pour="bug" hidden><label for="r-version">Version</label><input id="r-version" type="text" placeholder="1.2.0, lue dans « À propos »"></div>
+              <div class="champ" data-pour="idee"><label for="r-titre">En quelques mots</label><input id="r-titre" type="text"></div>
+            </div>
+            <div class="champ"><label for="r-texte" id="r-texte-l">Votre idée</label><textarea id="r-texte" required></textarea></div>
+            <div class="champ" data-pour="bug" hidden><label for="r-attendu">Ce que vous attendiez</label><textarea id="r-attendu"></textarea></div>
+            <div class="champ"><label for="r-prenom">Prénom ou pseudo (facultatif)</label><input id="r-prenom" type="text"></div>
+            <input class="pot" type="text" name="site" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <div class="garde"></div>
+            <p class="message" role="status" hidden></p>
+            <button class="btn btn--fort" type="submit" id="r-envoyer">Envoyer l’idée</button>
+          </form>
+
+          <form class="formulaire" id="f-lettre">
+            <h3>Les nouvelles par courriel</h3>
+            <p class="petit">Un courriel à chaque nouvelle version ou nouvelle du journal, rien d’autre. Pour vous désinscrire, il suffit d’y répondre.</p>
+            <div class="champ"><label for="l-courriel">Courriel</label><input id="l-courriel" type="email" autocomplete="email" required></div>
+            <fieldset class="groupe-cases">
+              <legend>Ce qui vous intéresse</legend>
+              <label class="case"><input type="checkbox" id="l-screen"> The Screen : les nouvelles versions</label>
+              <label class="case"><input type="checkbox" id="l-seat"> The Seat : les nouvelles versions des extensions</label>
+              <label class="case"><input type="checkbox" id="l-table"> The Table : le journal et la cagnotte</label>
+            </fieldset>
+            <input class="pot" type="text" name="site" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <div class="garde"></div>
+            <p class="message" role="status" hidden></p>
+            <button class="btn btn--fort" type="submit">M’inscrire</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="pied-page">
+  <div class="dedans">
+    <p class="petit">Par Nizzren. The Screen, The Seat et The Table sont des projets personnels, non officiels, sans lien avec Wizards of the Coast.</p>
+    <p class="petit">D&amp;D et D&amp;D Beyond sont des marques de Wizards of the Coast LLC.</p>  </div>
+</footer>
+
+<dialog class="capture" id="capture" aria-labelledby="capture-titre">
+  <div class="entete"><h3 id="capture-titre"></h3><button class="btn" type="button" id="capture-fermer">Fermer</button></div>
+  <img class="capture-image" id="capture-image" alt="" hidden>
+  <div class="cadre" id="capture-cadre"><b>Capture à venir</b><span class="petit" id="capture-vue"></span></div>
+</dialog>
+
+<script src="config.js"></script>
+<script src="site.js"></script>
+</body>
+</html>

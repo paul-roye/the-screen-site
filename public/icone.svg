@@ -1,0 +1,6 @@
+<!-- Icône du site : l'hexagone commun à The Screen, The Seat et The Table, avec l'écran du MJ. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <rect width="128" height="128" rx="22" fill="#0b1020"/>
+  <path d="M64 14 107 39v50L64 114 21 89V39z" fill="none" stroke="#ff6b6b" stroke-width="9" stroke-linejoin="round"/>
+  <path d="M36 82V50l17-8h22l17 8v32" fill="none" stroke="#f3ead2" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

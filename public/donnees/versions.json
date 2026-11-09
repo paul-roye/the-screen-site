@@ -1,0 +1,19 @@
+{
+  "the-screen": {
+    "version": "1.2.0",
+    "date": "2026-11-08",
+    "fichier": "the-screen-1.2.0.zip",
+    "nouveautes": "l’écran des joueurs, les plugins et une table mieux tenue",
+    "points": [
+      "Écran des joueurs sur un second écran ou une TV posée à plat, avec un seul bouton Diffuser.",
+      "Plugins activés campagne par campagne, dont The Table pour le ruban LED.",
+      "Fin de combat : PNJ tombés à marquer morts, jalon à démarrer ou à terminer.",
+      "Avant de terminer un jalon ou une étape : ce qui reste à jouer, à régler sans quitter la page.",
+      "Combat au clavier, trajets sans rencontres aléatoires, fenêtres qui se réduisent sur place."
+    ]
+  },
+  "scribe": { "version": "1.18.0" },
+  "party": { "version": "1.2.0", "fichier": "extension-groupe-1.2.0.zip" },
+  "wild-shape": { "version": "1.2.2", "fichier": "extension-druide-1.2.2.zip" },
+  "companion": { "version": "1.8.2", "fichier": "extension-compagnon-1.8.2.zip" }
+}
