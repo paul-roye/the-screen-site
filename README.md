@@ -2,6 +2,8 @@
 
 La page de présentation des trois outils, avec le téléchargement des dernières versions, une boîte à idées, le signalement des bugs, les nouvelles par courriel et la cagnotte de The Table.
 
+En ligne : https://the-screen-site.pages.dev (projet Cloudflare Pages `the-screen-site`, base D1 `the-screen-site`).
+
 Le site est fait de pages statiques (`public/`) et d'une petite API (`functions/`) qui range ce que les visiteurs envoient dans une base D1. Il est prévu pour **Cloudflare Pages**, qui le déploie à chaque `git push`. Rien à installer sur le poste : ni Node, ni outil de build.
 
 ## Ce qu'il y a dans le dépôt
@@ -74,7 +76,7 @@ L'API n'a encore jamais tourné : elle a été écrite sans pouvoir être lancé
 - **Depuis le projet d'un outil**, lire ses idées et ses bugs :
 
   ```powershell
-  Invoke-RestMethod -Headers @{ Authorization = "Bearer $env:JETON_RETOURS" } "https://<adresse du site>/api/retours?outil=the-screen&depuis=2026-11-01"
+  Invoke-RestMethod -Headers @{ Authorization = "Bearer $env:JETON_RETOURS" } "https://the-screen-site.pages.dev/api/retours?outil=the-screen&depuis=2026-11-01"
   ```
 
   Outils : `the-screen`, `scribe`, `party`, `wild-shape`, `companion`, `the-table`.
