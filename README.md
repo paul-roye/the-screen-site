@@ -19,6 +19,7 @@ Le site est fait de pages statiques (`public/`) et d'une petite API (`functions/
 | `public/donnees/versions.json` | Les versions en cours et le nom de leurs zips : **à mettre à jour à chaque version** |
 | `public/donnees/journal.json` | Le journal de fabrication de The Table ; ses photos dans `public/photos/` |
 | `public/captures/` | Les captures d'écran des extensions : `party.png`, `wild-shape.png`, `companion.png` |
+| `public/telechargements/` | Les zips à télécharger, servis tels quels |
 | `functions/api/` | L'API : `idees`, `idees/<id>/vote`, `bugs`, `promesses`, `lettre`, `retours`, `admin` |
 | `lib/outils.js` | Les fonctions communes de l'API |
 | `schema.sql` | Les tables de la base D1 et les premières idées |
@@ -37,7 +38,7 @@ Puis ouvrir http://localhost:8791/.
 
 Les intitulés du tableau de bord Cloudflare changent parfois ; l'ordre des étapes, lui, tient.
 
-1. **GitHub.** Créer un dépôt **public** `the-screen-site`, y pousser ce dossier. Si le dépôt porte un autre nom ou un autre propriétaire, corriger `depot` dans `public/config.js`.
+1. **GitHub.** Créer un dépôt **public** `the-screen-site`, y pousser ce dossier. Si le dépôt porte un autre nom ou un autre propriétaire, corriger `depot` dans `public/config.js` (il ne sert qu'au lien « Versions précédentes »).
 2. **Cloudflare Pages.** Créer un compte Cloudflare, puis « Workers & Pages » → créer un projet **Pages** relié au dépôt GitHub. Réglages de build : pas de framework, commande de build vide, dossier de sortie `public`.
 3. **Base D1.** « Storage & Databases » → D1 → créer une base `the-screen-site`. Dans son onglet Console, coller le contenu de `schema.sql` et l'exécuter.
 4. **Lier la base.** Dans le projet Pages → Settings → Bindings → ajouter une base D1, nom de variable **`DB`**, base `the-screen-site`.
@@ -53,7 +54,7 @@ Les intitulés du tableau de bord Cloudflare changent parfois ; l'ordre des éta
 
 6. **Turnstile.** Dans Cloudflare → Turnstile → ajouter un widget pour le domaine du site. La clé de site va dans `turnstile` de `public/config.js` (elle est publique), la clé secrète dans `TURNSTILE_SECRET`.
 7. **Redéployer** (un `git push`, ou « Retry deployment ») pour que la liaison et les secrets soient pris en compte.
-8. **Les zips.** Sur GitHub, créer une Release par zip à télécharger, avec **pour étiquette le nom du zip sans `.zip`** (`the-screen-1.2.0`, `extension-groupe-1.2.0`…) et le zip en pièce jointe. Les boutons « Télécharger » pointent vers `https://github.com/<depot>/releases/download/<étiquette>/<zip>`.
+8. **Les zips.** Ils sont dans le dépôt, sous `public/telechargements/`, et servis tels quels : les boutons « Télécharger » pointent vers `telechargements/<zip>`. Pas de Release GitHub à créer.
 
 ### À essayer une fois en ligne
 
@@ -68,7 +69,7 @@ L'API n'a encore jamais tourné : elle a été écrite sans pouvoir être lancé
 
 ## Au quotidien
 
-- **Une nouvelle version d'un outil** : publier son zip en Release (étiquette = nom du zip sans `.zip`), puis mettre à jour sa ligne dans `public/donnees/versions.json` (`version`, `date`, `fichier`, et pour The Screen `nouveautes` et `points`), et pousser.
+- **Une nouvelle version d'un outil** : copier son zip dans `public/telechargements/` (les anciens peuvent y rester : « Versions précédentes » mène à ce dossier sur GitHub), mettre à jour sa ligne dans `public/donnees/versions.json` (`version`, `date`, `fichier`, et pour The Screen `nouveautes` et `points`), et pousser.
 - **Une nouvelle du journal de The Table** : l'ajouter en tête de `public/donnees/journal.json` (`date` en AAAA-MM-JJ, `titre`, `texte`, `photos` : des chemins comme `photos/2026-11-20-ruban.jpg`), déposer les photos dans `public/photos/`, pousser.
 - **Une capture d'écran d'extension** : la déposer dans `public/captures/` sous le nom attendu ; tant qu'elle manque, la fenêtre dit « Capture à venir ».
 - **Relire ce que le site a reçu** : ouvrir `/admin.html` et y coller `JETON_ADMIN`.

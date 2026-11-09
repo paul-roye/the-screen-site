@@ -13,7 +13,7 @@
     ]
   },
   "scribe": { "version": "1.18.0" },
-  "party": { "version": "1.2.0", "fichier": "extension-groupe-1.2.0.zip" },
-  "wild-shape": { "version": "1.2.2", "fichier": "extension-druide-1.2.2.zip" },
-  "companion": { "version": "1.8.2", "fichier": "extension-compagnon-1.8.2.zip" }
+  "party": { "version": "1.3.0", "fichier": "extension-groupe-1.3.0.zip" },
+  "wild-shape": { "version": "1.3.0", "fichier": "extension-druide-1.3.0.zip" },
+  "companion": { "version": "1.9.0", "fichier": "extension-compagnon-1.9.0.zip" }
 }

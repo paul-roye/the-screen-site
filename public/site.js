@@ -40,10 +40,10 @@
   $$('#ambiances button').forEach(function (b) { b.addEventListener('click', function () { ambiance(b.dataset.ambiance, true); }); });
   ambiance(document.documentElement.dataset.ambiance === 'strahd' ? 'strahd' : 'aeldran', false);
 
-  /* ---------- Versions et téléchargements : donnees/versions.json ---------- */
+  /* ---------- Versions et téléchargements : donnees/versions.json, zips dans telechargements/ ---------- */
   var depot = SITE.depot || '';
   var lienVersion = function (v) {
-    return depot && v && v.fichier ? 'https://github.com/' + depot + '/releases/download/' + v.fichier.replace(/\.zip$/, '') + '/' + v.fichier : null;
+    return v && v.fichier ? 'telechargements/' + v.fichier : null;
   };
   if ($('[data-version], [data-telecharge]')) {
     lireJson('donnees/versions.json').then(function (versions) {
@@ -61,7 +61,7 @@
         if (url) a.href = url;
       });
     }).catch(function () { /* la page garde les valeurs écrites dans le HTML */ });
-    $$('[data-versions]').forEach(function (a) { if (depot) a.href = 'https://github.com/' + depot + '/releases'; });
+    $$('[data-versions]').forEach(function (a) { if (depot) a.href = 'https://github.com/' + depot + '/tree/main/public/telechargements'; });
   }
 
   /* ---------- Le plan de table : ambiances du ruban et tour de jeu ---------- */
