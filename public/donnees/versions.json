@@ -1,12 +1,11 @@
 {
   "the-screen": {
     "version": "1.2.1",
-    "date": "2026-11-09",
+    "date": "2026-11-10",
     "fichier": "the-screen-1.2.1.zip",
-    "nouveautes": "l’accueil pour tous, et les mises à jour par patch",
+    "nouveautes": "l’accueil pour tous",
     "points": [
       "Accueil : avec une seule campagne, l’accueil était inaccessible, et « Nouvelle campagne » avec lui. Les flèches croisées de l’en-tête y mènent maintenant toujours, et le premier lancement montre la liste.",
-      "Patchs : un petit zip qui ne change que les fichiers nécessaires. Décompressez-le, double-cliquez « Appliquer le patch.cmd » et choisissez votre gestionnaire ; vos campagnes ne sont pas touchées.",
       "Extensions des joueurs : si vos joueurs utilisent The Seat · Party, vous fixez ses limites pour votre campagne (seuils de santé, PV en chiffres ou non) dans la fenêtre Campagne, onglet « Fiches D&D Beyond ».",
       "Forme sauvage : un druide transformé (extension de son joueur) est montré avec sa forme, sa CA et son portrait dans Personnages, Combat et sur le tableau des joueurs.",
       "Extension du MJ 1.18.0, à recharger dans Chrome : relevé toutes les 20 secondes, et les formes sauvages d’un druide ne sont plus relevées comme des compagnons."
