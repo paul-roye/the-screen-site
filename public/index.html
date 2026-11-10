@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:wght@400;500;700&family=Barlow+Semi+Condensed:wght@400;500;700&family=Cinzel:wght@500;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Grenze+Gotisch:wght@500;700&family=Spectral:ital,wght@0,400;0,500;1,400&display=swap">
 <link rel="stylesheet" href="site.css">
-<script>try { if (localStorage.getItem('ambiance') === 'strahd') document.documentElement.dataset.ambiance = 'strahd'; } catch (e) {}</script>
+<script>try { if (localStorage.getItem('ambiance') !== 'aeldran') document.documentElement.dataset.ambiance = 'strahd'; } catch (e) {}</script>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -35,8 +35,8 @@
     <div class="theme">
       <span class="sur" id="theme-l">Thème de la page</span>
       <div class="choix" id="ambiances" role="group" aria-labelledby="theme-l">
-        <button type="button" data-ambiance="aeldran" aria-pressed="true" title="Chroniques d’Aëldran : médiéval, or et azur" style="--c-theme: var(--pastille-aeldran)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg><span>Aëldran</span></button>
-        <button type="button" data-ambiance="strahd" aria-pressed="false" title="Malédiction de Strahd : gothique, néon" style="--c-theme: var(--pastille-strahd)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><span>Strahd</span></button>
+        <button type="button" data-ambiance="aeldran" aria-pressed="false" title="Chroniques d’Aëldran : médiéval, or et azur" style="--c-theme: var(--pastille-aeldran)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11.562 3.266a.5.5 0 0 1 .876 0L15.39 8.87a1 1 0 0 0 1.516.294L21.183 5.5a.5.5 0 0 1 .798.519l-2.834 10.246a1 1 0 0 1-.956.734H5.81a1 1 0 0 1-.957-.734L2.02 6.02a.5.5 0 0 1 .798-.519l4.276 3.664a1 1 0 0 0 1.516-.294z"/><path d="M5 21h14"/></svg><span>Aëldran</span></button>
+        <button type="button" data-ambiance="strahd" aria-pressed="true" title="Malédiction de Strahd : gothique, néon" style="--c-theme: var(--pastille-strahd)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg><span>Strahd</span></button>
       </div>
     </div>
   </div>
