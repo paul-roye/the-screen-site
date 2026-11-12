@@ -1,18 +1,33 @@
 {
   "the-screen": {
-    "version": "1.2.1",
-    "date": "2026-11-10",
-    "fichier": "the-screen-1.2.1.zip",
-    "nouveautes": "l’accueil pour tous",
+    "version": "1.3.0",
+    "date": "2026-11-12",
+    "fichier": "the-screen-1.3.0.zip",
+    "nouveautes": "quêtes, réputation et l’or des héros",
     "points": [
-      "Accueil : avec une seule campagne, l’accueil était inaccessible, et « Nouvelle campagne » avec lui. Les flèches croisées de l’en-tête y mènent maintenant toujours, et le premier lancement montre la liste.",
-      "Extensions des joueurs : si vos joueurs utilisent The Seat · Party, vous fixez ses limites pour votre campagne (seuils de santé, PV en chiffres ou non) dans la fenêtre Campagne, onglet « Fiches D&D Beyond ».",
-      "Forme sauvage : un druide transformé (extension de son joueur) est montré avec sa forme, sa CA et son portrait dans Personnages, Combat et sur le tableau des joueurs.",
-      "Extension du MJ 1.18.0, à recharger dans Chrome : relevé toutes les 20 secondes, et les formes sauvages d’un druide ne sont plus relevées comme des compagnons."
+      "Quêtes : deux options de campagne (fenêtre Campagne, onglet « Quêtes et réputation ») et le widget Quêtes : les quêtes par donneur, leur importance (renommable, à vos couleurs), leur type, leur niveau optimal et la difficulté pour le groupe, leurs récompenses, leurs étapes dans le Déroulé, qui ne paraissent qu’une fois la quête acceptée. data/quetes.json pour votre agent IA (formats/quetes.md), ou « + Quête ».",
+      "Réputation : de Haï à Exalté auprès de chaque faction, avec ce que provoque chaque rang ; une jauge dans la fiche de la faction, un journal de chaque changement, et les récompenses des quêtes qui la font bouger.",
+      "Panneaux des quêtes : autant que vous voulez, sur l’écran des joueurs : des post-its épinglés, aux couleurs de la campagne ou sur un fond de bois, tournables en portrait, qui ne débordent jamais. Une texture de votre bibliothèque d’images (catégorie « Textures ») peut servir de fond.",
+      "Donner de l’or : des pièces à un héros, partagées entre les héros ou à la bourse du groupe, écrites sur D&D Beyond ou seulement notées : l’or des quêtes, le butin des rencontres, et des objets « Pièces » dans vos données. Ce qui est donné reste noté.",
+      "Écran des joueurs : un thème jour ou nuit, des fonds qui suivent la charte de la campagne, et les héros en médaillons au bord de la carte, en option.",
+      "Ajouter des outils : « Ajouter un outil » propose aussi ceux qui n’ont pas encore leurs données ou leur plugin, après confirmation.",
+      "Images : ajoutez des images ou un dossier entier à la bibliothèque depuis le widget Images.",
+      "Extension du MJ : version 1.20.0, à recharger dans Chrome : elle sait donner des pièces."
     ]
   },
-  "scribe": { "version": "1.18.0" },
-  "party": { "version": "1.3.1", "fichier": "extension-groupe-1.3.1.zip" },
-  "wild-shape": { "version": "1.5.1", "fichier": "extension-druide-1.5.1.zip" },
-  "companion": { "version": "1.9.0", "fichier": "extension-compagnon-1.9.0.zip" }
+  "scribe": {
+    "version": "1.20.0"
+  },
+  "party": {
+    "version": "1.3.1",
+    "fichier": "extension-groupe-1.3.1.zip"
+  },
+  "wild-shape": {
+    "version": "1.5.1",
+    "fichier": "extension-druide-1.5.1.zip"
+  },
+  "companion": {
+    "version": "1.9.0",
+    "fichier": "extension-compagnon-1.9.0.zip"
+  }
 }
